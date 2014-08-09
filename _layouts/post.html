@@ -33,10 +33,12 @@ layout: default
     {% endfor %}
 </div>
 
+<!--
 <div class="post-history">
     <h2>文章修改纪录</h2>
     <div id="history">加载中...</div>
 </div>
+-->
 
 <!--动态载入jquery, md5, 然后渲染log-->
 <script type="text/javascript">
@@ -61,11 +63,12 @@ layout: default
         head.insertBefore(script, head.firstChild);
     }
 
+    /*
     loadJs('/js/jquery-1.7.2.min.js', function(){
         loadJs('/js/md5.min.js', function(){
             //取到文章的路径，追加到请求地址上
             var articlePath = '{{page.path}}'
-            var api = 'https://api.github.com/repos/orangle/oragnle.github.io/commits?path='
+            var api = 'https://api.github.com/repos/orangle/orangle.github.io/commits?path='
             var tmpl = '<div class="article"> <span class="datetime">{date}</span> <span><image src="{src}" title="{author}">{message}</span></div>'
             var gravstarurl = 'https://1.gravatar.com/avatar/{md5hash}?s=16'
             $.getJSON(api + articlePath,function(data){
@@ -85,6 +88,7 @@ layout: default
                 $('#history').html(history);
             })
         });
+    */
     });
 </script>
 
