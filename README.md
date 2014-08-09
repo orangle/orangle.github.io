@@ -1,9 +1,6 @@
-﻿草依山的Javascript世界
+﻿orangleliu 笔记本
 ================
 
-http://jser.me 的源码
+如果你喜欢或者使用这个代码，请添加一个 http://www.orangleliu.info/ 的链接
 
-
-如果你喜欢或者使用这个代码，请添加一个 http://jser.me 的链接
-
-fork 过来还没整理
+记录学习和生活

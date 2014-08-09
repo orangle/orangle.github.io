@@ -1,7 +1,7 @@
-name: 草依山的Javascript世界 
+﻿name: orangleliu 笔记本 
 markdown: redcarpet
 redcarpet :
     extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "tables", "with_toc_data"]
-url : http://jser.me
+url : http://orangleliu.info
 pygments: true
 #lsi: true
