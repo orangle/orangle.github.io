@@ -9,10 +9,6 @@ layout: default
 
 文章地址： <a href="{{site.url}}{{ page.url }}">{{page.title}}</a>
 
-<!--
-<h3>如果对于这个文章有什么看法，欢迎到<a href="http://www.laiwang.com/">来往</a>与我交流↓↓↓↓↓</h3>
-<img width="180" height="180" src="/images/laiwang1.png" />
--->
 </div>
 
 <div class="meta">
@@ -71,7 +67,7 @@ layout: default
             var articlePath = '{{page.path}}'
             var api = 'https://api.github.com/repos/jserme/jserme.github.io/commits?path='
             var tmpl = '<div class="article"> <span class="datetime">{date}</span> <span><image src="{src}" title="{author}">{message}</span></div>'
-            var gravstarurl = 'https://1.gravatar.com/avatar/{md5hash}?s=16' 
+            var gravstarurl = 'https://1.gravatar.com/avatar/{md5hash}?s=16'
             $.getJSON(api + articlePath,function(data){
                 if( data.length == 0 ){
                     $('#history').html('暂无历史纪录 :)');
