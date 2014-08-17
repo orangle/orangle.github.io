@@ -2,7 +2,7 @@
 layout: post
 date: 2014-08-09 20:17:48 +0800
 title: 在Python和IPython中使用Docker
-tags: 翻译
+tags: 翻译 docker
 ---
 
 
