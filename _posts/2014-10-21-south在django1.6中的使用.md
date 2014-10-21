@@ -1,4 +1,4 @@
-﻿---
+---
 layout: post
 date: 2014-10-21 12:58:48 +0800
 title:  south在django1.6中的使用
