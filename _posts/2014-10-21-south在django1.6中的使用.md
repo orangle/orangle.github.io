@@ -1,12 +1,10 @@
----
+﻿---
 layout: post
 date: 2014-10-21 12:58:48 +0800
 title:  south在django1.6中的使用
 tags: django
 ---
 
-south在django1.6中的使用
-====================
 
 >django1.7中已经支持数据合并了，所以只能在django1.4 1.5 1.6的版本中使用south。
 south的主要作用就是做数据的合并，当我们在django中定义了一个模型之后，使用syncdb同步到数据库中，而后如果
