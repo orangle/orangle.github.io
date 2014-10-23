@@ -60,7 +60,15 @@ tags: django
 ##小结
 从试用的角度来看，debug-tool还是很强大的，给我们的开发和调试带来很多的方面。
 
-大家可以尝试下。
+##jquery配置
+今天使用的时候发现里面默认的jquery配置是google的cdn，由于f的原因，我们在settings中配置一个非国外的源 
+
+	DEBUG_TOOLBAR_CONFIG = {
+		'JQUERY_URL' : "http://code.jquery.com/jquery-2.1.1.min.js"
+	}
+	
+这样就可以正常使用了。
+
 
 
 
