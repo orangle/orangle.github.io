@@ -32,7 +32,8 @@ django文档中有一节是 [Query-related classes](https://docs.djangoproject.c
 
     Reporters.objects.filter(name='Tintin').update(stories_filed=F('stories_filed') + 1)
 
-不仅代码量少了，而且这是直接在数据中操作，效率也变高了，特别是并发的情况，减少了同时操作带来的隐患。
+不仅代码量少了，而且这是直接在数据中操作，效率也变高了，特别是并发的情况，减少了多线程同时操作带来的隐患。
+**但是不支持字符串相加的操作**
 
 ###[字段比较](https://docs.djangoproject.com/en/1.7/topics/db/queries/#using-f-expressions-in-filters)
 例如一个合同有两个日期，一个叫做终止日期，一个叫做结束日期，现在要筛选出终止日期小于结束日期的合同。
