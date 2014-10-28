@@ -22,7 +22,6 @@ layout: default
         <span>{{ page.date | date:"%Y-%m-%d"}}</span>
     </div>
 </div>
-
 <div class="related-post">
     <h2>相关文章</h2>
     {% for post in site.related_posts limit:5 %}
@@ -32,6 +31,13 @@ layout: default
         </div>
     {% endfor %}
 </div>
+
+<!-- weibo BEGIN    -->
+<div>
+<h2>最近动态</h2>
+<a href="http://weibo.com/u/2717144113?s=6uyXnP" target="_blank"><img border="0" src="http://service.t.sina.com.cn/widget/qmd/2717144113/85ef23b2/4.png"/></a>
+</div>
+<!-- weibo END -->
 
 <!--
 <div class="post-history">
@@ -96,10 +102,6 @@ layout: default
 <div id="comment" class="ds-thread" data-title="{{page.title}}" data-url="http://www.orangleliu.info/{{page.url}}"></div>
 <!-- Duoshuo Comment END -->
 
-<!-- weibo BEGIN    -->
-<div>
-<a href="http://weibo.com/u/2717144113?s=6uyXnP" target="_blank"><img border="0" src="http://service.t.sina.com.cn/widget/qmd/2717144113/85ef23b2/4.png"/></a>
-</div>
-<!-- weibo END -->
+
 
 
