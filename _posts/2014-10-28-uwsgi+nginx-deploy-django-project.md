@@ -79,7 +79,7 @@ add one line to nginx.conf ,like
         server {
             ....
 
-###start up(the use have the permission)
+##start up(the use have the permission)
 uwsgi: in project directory
 
     uwsgi --ini uwsgi.ini
@@ -88,9 +88,9 @@ nginx:
 
     /usr/local/nginx/sbin/nginx
 
-###Test
+##Test
 The you can open your favorite browser, type http://127.0.0.1:8000 , you will see your project's index page.
 Of course, what i do is very simple, you can config custom configure of your project.
 
-###REF
+##REF
 [django_and_nginx](http://uwsgi-docs.readthedocs.org/en/latest/tutorials/Django_and_nginx.html)
