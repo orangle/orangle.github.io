@@ -45,7 +45,7 @@ ngrok是一个反向代理，可以从公网建立一个安全隧道到本地的
 
 这里就是请求的监控界面，这里可以看到每个请求的具体参数等等，对于调试非常友好。
 
-![ngrok](/images/ngork_detail.png "ngrok界面")
+![ngrok](/images/ngrok_detail.png "ngrok界面")
 
 
 ###小结
