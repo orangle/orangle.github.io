@@ -61,7 +61,7 @@ tags: happy
         except Exception as e:
             musicq = tiankong
 
-        print "now play music ..... %s"%music
+        print "now play music ..... %s"%musicq
         autopy.mouse.click()
         keys = list(musicq)*2
         print keys
