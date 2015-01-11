@@ -20,11 +20,14 @@ tags: happy
 代码如下：
 
     # -*- encoding=utf-8 -*-
+    #author: orangleliu@gmai.com
+    #date: 2015-01-10
     import autopy
     import time
     import sys
 
     '''
+
     模拟点击键盘  自动弹奏google doodle 曲子
     '''
 
