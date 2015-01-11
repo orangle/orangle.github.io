@@ -73,5 +73,7 @@ tags: happy
 ![doodle](/images/google_musicpng.png "script useing")
 
 听着程序自动弹奏的音乐感觉挺新奇，嘿嘿。
+**有一点不好，鼠标要放在要事先放在doodle上，中间还不能移动鼠标 --！**
+
 
 
