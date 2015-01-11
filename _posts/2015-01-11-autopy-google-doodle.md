@@ -9,6 +9,9 @@ tags: happy
 这个 谷歌电吉他Logo可以让用户在其上面弹奏吉他。虽然是一个细小的功能，但却大受欢迎！
 
 - [google doodle 演示地址](http://www.iplaysoft.com/google-guitar-doodle.html)
+
+<iframe width="640" height="230" scrolling="no" style="border:3px solid #eee;display:block;margin:10px auto;" src="http://www.iplaysoft.com/plus/others/google-guitar-doodle/recordable-guitar.htm"></iframe>
+
 - [google 的地址 可能需要翻墙](http://www.google.com/logos/2011/lespaul.html)
 - [别人整理的源码地址](http://pan.baidu.com/s/1kTmSsrP)  不过在本地浏览器直接打开没有声音，在网站上没问题
 - 更多的信息 请搜索 google doodle + 关键词
@@ -73,7 +76,7 @@ tags: happy
 ![doodle](/images/google_musicpng.png "script useing")
 
 听着程序自动弹奏的音乐感觉挺新奇，嘿嘿。
-**有一点不好，鼠标要放在要事先放在doodle上，中间还不能移动鼠标 --！**
+**有一点不好，鼠标要放在要事先放在doodle上（最好是doodle上，不然和当前网页的快捷键冲突了就会有惊喜啦），中间还不能移动鼠标 --！**
 
 
 
