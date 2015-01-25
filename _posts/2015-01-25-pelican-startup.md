@@ -104,37 +104,37 @@ D:\code\ptest>pelican content/
 ```
 
 在output目录中就生成了如下的文件
+
 ```
-└─output
-    │  archives.html
-    │  authors.html
-    │  categories.html
-    │  index.html
-    │  my-super-post.html
-    │  tags.html
-    │
-    ├─author
-    │      orangleliu.html
-    │
-    ├─category
-    │      python.html
-    │
-    ├─tag
-    │      pelican.html
-    │      publishing.html
-    │
-    └─theme
-        ├─css
-        │      main.css
-        │      pygment.css
-        │      reset.css
-        │      typogrify.css
-        │      wide.css
+    └─output
+        │  archives.html
+        │  authors.html
+        │  categories.html
+        │  index.html
+        │  my-super-post.html
+        │  tags.html
         │
-        └─images
-            └─icons
-                    aboutme.png
-                    ...
+        ├─author
+        │      orangleliu.html
+        │
+        ├─category
+        │      python.html
+        │
+        ├─tag
+        │      pelican.html
+        │      publishing.html
+        │
+        └─theme
+            ├─css
+            │      main.css
+            │      pygment.css
+            │      reset.css
+            │      typogrify.css
+            │      wide.css
+            │
+            └─images
+                └─icons
+                        aboutme.png
 ```
 
 ##本地查看
@@ -146,7 +146,7 @@ Serving HTTP on 0.0.0.0 port 8000 ...
 ```
 [http://127.0.0.1:8000/](http://127.0.0.1:8000/)就可以在本地查看生成的博客了。
 
-![pelican_localhost](/image/pelican_start.png)
+![pelican_localhost](/images/pelican_start.png)
 
 这样无论在github，还是gitcafe，还是自己的vps都可以快速的搭建博客了。
 
