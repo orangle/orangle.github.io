@@ -65,19 +65,17 @@ pelican支持.rst, .md, .html 等文件,以及对应的格式， 还可以添加
 
 在content中添加一个 test.md文件
 ```
-Title: HI baby！
-Date: 2015-01-25 10:20
-Modified: 2015-01-25 10:20
-Category: Python
-Tags: pelican, publishing
-Slug: my-super-post
-Authors: Orangleliu
-Summary: Short version for index and feeds
-```
+    Title: HI baby！
+    Date: 2015-01-25 10:20
+    Modified: 2015-01-25 10:20
+    Category: Python
+    Tags: pelican, publishing
+    Slug: my-super-post
+    Authors: Orangleliu
+    Summary: Short version for index and feeds
 
-##第一篇测试
- - markdown语法
-
+    ##第一篇测试
+     - markdown语法
 ```
 
 目录结构现在是这样子
