@@ -73,7 +73,6 @@ pelican支持.rst, .md, .html 等文件,以及对应的格式， 还可以添加
     Slug: my-super-post
     Authors: Orangleliu
     Summary: Short version for index and feeds
-
     ##第一篇测试
      - markdown语法
 ```
