@@ -15,11 +15,13 @@ tags: blog
 ```
 pip install pelican markdown
 ```
+
 不管你是用系统的python环境还是 virtualenv 都需要安装必要的组件。根据包依赖应该会装这些packages
 **pelican, feedgenerator, jinja2, blinker, unidecode, markupsafe**
 [这里有更详细的清单](http://docs.getpelican.com/en/3.5.0/install.html)
 
 ##建立项目
+
 -  建立一个文件夹用来创建项目
 ```
 D:\code>mkdir ptest
@@ -27,6 +29,7 @@ D:\code>cd ptest
 ```
 
 -  建立一个初始的项目框架
+
 ```
 D:\code\ptest>pelican-quickstart
 ```
@@ -64,6 +67,7 @@ D:.
 pelican支持.rst, .md, .html 等文件,以及对应的格式， 还可以添加主题，插件，图片等等一些博客元素，文档中都有说明。
 
 在content中添加一个 test.md文件
+
 ```
     Title: HI baby！
     Date: 2015-01-25 10:20
@@ -78,6 +82,7 @@ pelican支持.rst, .md, .html 等文件,以及对应的格式， 还可以添加
 ```
 
 目录结构现在是这样子
+
 ```
 D:\code\ptest>tree /f
 文件夹 PATH 列表
@@ -97,6 +102,7 @@ D:.
 
 - 生成html
 使用命令,也可以通过命令指定其他的静态文件生成路径
+
 ```
 D:\code\ptest>pelican content/
 ```
@@ -136,12 +142,14 @@ D:\code\ptest>pelican content/
 ```
 
 ##本地查看
+
 ```
 D:\code\ptest>cd output
 
 D:\code\ptest\output>python -m SimpleHTTPServer
 Serving HTTP on 0.0.0.0 port 8000 ...
 ```
+
 [http://127.0.0.1:8000/](http://127.0.0.1:8000/)就可以在本地查看生成的博客了。
 
 ![pelican_localhost](/images/pelican_start.png)
