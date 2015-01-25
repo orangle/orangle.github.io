@@ -146,7 +146,7 @@ Serving HTTP on 0.0.0.0 port 8000 ...
 ```
 [http://127.0.0.1:8000/](http://127.0.0.1:8000/)就可以在本地查看生成的博客了。
 
-![pelican_localhost](/image/pelican_start.png  myblog)
+![pelican_localhost](/image/pelican_start.png)
 
 这样无论在github，还是gitcafe，还是自己的vps都可以快速的搭建博客了。
 
