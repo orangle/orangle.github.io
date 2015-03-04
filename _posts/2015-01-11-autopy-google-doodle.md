@@ -22,6 +22,7 @@ tags: happy
 
 代码如下：
 
+{% highlight ruby linenos %}
     # -*- encoding=utf-8 -*-
     #author: orangleliu@gmai.com
     #date: 2015-01-10
@@ -70,6 +71,7 @@ tags: happy
         print keys
         for i in keys:
             clickbower(i)
+{% endhighlight %}
 
 使用的方法也大致截图演示了下，虽然听起来还是很僵硬，不过挺开心的，python实现一个东西真是简单啊。
 
