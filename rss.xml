@@ -7,13 +7,13 @@ layout : nil
 <channel>
 <title>{{site.name |append:' ' xml_escape}}</title>
 <image>
-    <link>http://orangleliu.info</link>
-    <url>http://orangleliu.info/images/logo.png</url>
+    <link>{{site.url}}</link>
+    <url>{{site.url}}/images/logo.png</url>
 </image>
-<link>http://orangleliu.info</link>
+<link>{{ site.url }}</link>
 <description/>
-<language>zh-cn</language>
-<generator>http://orangleliu.info</generator>
+<language>{{ site.language }}</language>
+<generator>{{ site.url }}</generator>
 <ttl>5</ttl>
 <copyright><![CDATA[Copyright &copy; jser.me]]></copyright>
 {% for post in site.posts limit: 20 %}
