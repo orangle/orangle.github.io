@@ -22,7 +22,7 @@ tags: happy
 
 代码如下：
 
-{% highlight ruby linenos %}
+{% highlight python %}
     # -*- encoding=utf-8 -*-
     #author: orangleliu@gmai.com
     #date: 2015-01-10
