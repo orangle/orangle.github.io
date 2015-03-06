@@ -27,6 +27,8 @@ tags: blog
     - 这中间出现了[ERROR] Unable to find RubyGems in site_ruby or core Ruby. Please install RubyGems and rerun 'ruby dk.rb install'错误，解决办法参见[ruby-on-rails-devkit-windows](http://stackoverflow.com/questions/6550582/ruby-on-rails-devkit-windows)
 ```
 ruby dk.rb init
+```
+```
 ruby dk.rb install
 ```
 
