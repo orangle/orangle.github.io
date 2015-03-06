@@ -13,10 +13,15 @@
 
 * [gem下载地址](https://rubygems.org/pages/download), 下载之后安装 ruby setup.rb , gem类似python的pip 用来安装第三方包
 
+* 这里还是要安装开发kit(DevKit-mingw64-64-4.7.2-20130224-1432-sfx.exe)要跟python版本对应  下载之后解压，使用ruby dk.rb init
+然后 ruby dk.rb install
+    - 这中间出现了[ERROR] Unable to find RubyGems in site_ruby or core Ruby. Please install RubyGems and rerun 'ruby dk.rb install'错误，解决办法参见[ruby-on-rails-devkit-windows](http://stackoverflow.com/questions/6550582/ruby-on-rails-devkit-windows)
+
 * 安装jekyll
-    - **gem install jekyll --pre**
-    - **gem install jekyll -v '2.0.0.alpha.1'**
+    - **$ gem install jekyll**
 
-
+* 启动
+    - jekyll serve
+    - 随后就自动编译 启动服务啦 ，没有错误的话 http://127.0.0.1:4000/ 可以访问到项目
 
 
