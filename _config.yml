@@ -1,8 +1,9 @@
-﻿name: orangleliu 笔记本
+name: orangleliu 笔记本
 markdown: redcarpet
 redcarpet :
     extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "tables", "with_toc_data"]
 url : http://orangleliu.info
 pygments: true
 language: zh-cn
+encoding: utf-8
 #lsi: true

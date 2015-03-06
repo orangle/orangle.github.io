@@ -1,8 +1,8 @@
 ---
 layout: post
 date: 2015-03-06 20:17:48 +0800
-title:  [黑夜路人]分享下跳槽的经验技巧
-tags: 分享 职场
+title: [黑夜路人]分享下跳槽的经验技巧
+tags: 分享,职场
 ---
 
 > 转载：黑夜路人群技术讨论总结，由黑夜路人(公共号heiyeluren-tech)整理，[原文链接](http://mp.weixin.qq.com/s?__biz=MzA3MDA2MjE2OQ==&mid=205344234&idx=1&sn=30e24b16e372f665f6a1e90c05fd1af3&scene=1&from=groupmessage&isappinstalled=0#rd)
