@@ -24,4 +24,8 @@
     - jekyll serve
     - 随后就自动编译 启动服务啦 ，没有错误的话 http://127.0.0.1:4000/ 可以访问到项目
 
+* 关于中文乱码的问题可以参考[Jekyll在Windows下面中文编码问题解决方案](http://www.cnblogs.com/aleda/articles/Jekyll-in-Windows-following-Chinese-encoding-problem-solutions.html)
 
+* 一些坑
+	- title中不能直接使用[], 否则无法正确识别
+	- 
