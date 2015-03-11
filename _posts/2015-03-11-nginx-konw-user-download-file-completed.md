@@ -11,9 +11,11 @@ tags: nginx
 
 * 最原始的思路，查看日志，下载了一个文件之后我们看日志的传输的文件大小跟文件原始的大小是否一致
 * 测试要下载的文件的大小
+
 ![测试文件](/images/filez_size.png)
 
 * 一次完整下载的log 跟一次没下载完成的log，可以通过对比传输字节的大小来判断
+
 ![测试结果](/images/nginx_log.png)
 
 这种方式就是根据日志来做统计，每隔一段时间分析日志得到结果，有些麻烦，时效性不好。
@@ -33,6 +35,7 @@ tags: nginx
     + [利用nginx的x-accel-redirect头实现下载控制](http://bianbian.org/154/利用nginx的x-accel-redirect头实现下载控制（附带php和rails实例代码）/) 中文
 
 大概的流程：
+
 ![结构](/images/ngix.jpg)
 
 主要的工作就是2个
