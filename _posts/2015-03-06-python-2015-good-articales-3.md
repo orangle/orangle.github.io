@@ -48,6 +48,14 @@ tags: 分享
     - [Combinatorial Generation Using Coroutines With Examples in Python](http://sahandsaba.com/combinatorial-generation-using-coroutines-in-python.html) python异步编程例子
     - [Python AsyncIO - Streams - Client and Server](http://davebehnke.com/python-asyncio-streams-client-server.html) python 异步编程，服务端客户端编程例子
     - [Understanding Asynchronous IO With Python 3.4's Asyncio And Node.js](http://sahandsaba.com/understanding-asyncio-node-js-python-3-4.html) 通过比较来解释asyncio 异步的原理
+    - [TOPIC MODELING IN 9/11 NEWS ARTICLES](http://blog.dominodatalab.com/topic-modeling-in-sept-11-news-articles/) 911 事件新闻分析以及可视化，有源码，有演示
+    - [Markov Decision Process (MDP) Toolbox for Python](https://github.com/sawcordwell/pymdptoolbox) 马尔可夫决策过程(MDP)工具包,托管在github上
+    - [PyStruct](https://pystruct.github.io/)  结构化学习的类库（机器学习的一种）
+    - [Computing the optimal road trip across the U.S.](http://nbviewer.ipython.org/github/rhiever/Data-Analysis-and-Machine-Learning-Projects/blob/master/optimal-road-trip/Computing%20the%20optimal%20road%20trip%20across%20the%20U.S..ipynb) Python下基于pandas和googlemaps，用遗传算法规划旅美最佳行程
+    - [The Efficient Frontier: Markowitz portfolio optimization in Python](http://blog.quantopian.com/markowitz-portfolio-optimization-2/)介绍马科维茨投资组合优化及其在Python下基于cvxopt的实现
+
+* 课程教程
+    - [概率论与数理统计](http://mooc.study.163.com/course/NJU-1000031001#/info)数学理论与编程应用的完美结合！南京大学课程，网易云课题免费学习，是不是很激动人心那！ 快来报名吧
 
 * 讨论帖子
     - [Best book for machine learning in python ? ](http://www.reddit.com/r/MachineLearning/comments/2xptdg/best_book_for_machine_learning_in_python/) reddit 上讨论python机器学习的书籍
