@@ -45,14 +45,14 @@ tags: nginx
 **这里的重点是使用nginx 的post_action参数， 在下载请求结束之后把下载的情况发送给另一个统计服务，由统计服务来判断文件下载的情况**
 
 
-
 配置类似
 
     location / {
         limit_rate 20k;
-        post_action /afterdownload;
+        post_action @afterdownload;
     }
-    location /afterdownload {
+
+    location @afterdownload {
         proxy_pass http://127.0.0.1:8888/counting?FileName=$uri&ClientIP=$remote_addr&body_bytes_sent=$body_bytes_sent&status=$request_completion;
         internal;
     }
@@ -68,11 +68,26 @@ tags: nginx
     #Created Time: 2015-03-11 16:41:05
     #License: MIT
     ############################
-    from flask import Flask
+    '''
+    nginx统计用户下载文件字节
+
+    '''
+
+    from flask import Flask, request
     app = Flask(__name__)
+
     @app.route("/counting")
     def counting():
-        return ""
+        req = request.args.get("FileName")
+        clientip = request.args.get("ClientIP")
+        size = request.args.get("body_bytes_sent")
+        status = request.args.get("status")
+        print "request  ", req
+        print "ip  ", clientip
+        print "size  ", size
+        print "status  ", status
+        return "ok"
+
     if __name__ == "__main__":
         app.run(port=8888, debug=True)
 
@@ -81,8 +96,16 @@ tags: nginx
     lzz@ubuntu:code$ python counting_file.py
      * Running on http://127.0.0.1:8888/
      * Restarting with reloader
-    127.0.0.1 - - [11/Mar/2015 16:45:15] "GET /counting?FileName=/afterdownload&ClientIP=10.0.1.16&body_bytes_sent=0&status=OK HTTP/1.0" 200 -
-    127.0.0.1 - - [11/Mar/2015 16:47:51] "GET /counting?FileName=/afterdownload&ClientIP=10.0.1.16&body_bytes_sent=245760&status= HTTP/1.0" 200 -
+    request   /index.html
+    ip   10.0.1.16
+    size   0
+    status   OK
+    127.0.0.1 - - [12/Mar/2015 10:42:59] "GET /counting?FileName=/index.html&ClientIP=10.0.1.16&body_bytes_sent=0&status=OK HTTP/1.0" 200 -
+    request   /Pillow-2.3.0.zip
+    ip   10.0.1.16
+    size   225280
+    status
+    127.0.0.1 - - [12/Mar/2015 10:43:14] "GET /counting?FileName=/Pillow-2.3.0.zip&ClientIP=10.0.1.16&body_bytes_sent=225280&status= HTTP/1.0" 200 -
 
 只要在flask中做处理就可以统计用户下载的情况了。
 上面的文章也说了，当用户使用多个连接下载的时候可能就有问题了，会重复统计，结果也会不准确，所以还有很多改进空间.
