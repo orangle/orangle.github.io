@@ -31,6 +31,7 @@ tags: 分享
 * 资源整合页面
     - [100本python书籍下载](http://www.pythontip.com/study/share_yunpan?page=1)
     - [python 书籍汇总](http://automationtesting.sinaapp.com/blog/python_books) sae上一个博客的总结
+    - [Python Tools for Machine Learning](https://www.cbinsights.com/blog/python-tools-machine-learning/)  机器学习哦，不是数据分析库
 
 * 各种文章
     - [Micro-Optimizations in Python Code: Speeding Up Lookups](http://jamesls.com/micro-optimizations-in-python-code-speeding-up-lookups.html) python代码微优化，在其他优化已经做完之后可以尝试下，压榨最后的性能提升
@@ -55,6 +56,9 @@ tags: 分享
     - [The Efficient Frontier: Markowitz portfolio optimization in Python](http://blog.quantopian.com/markowitz-portfolio-optimization-2/)介绍马科维茨投资组合优化及其在Python下基于cvxopt的实现
     - [python日志系统的几点建议](http://python.jobbole.com/81132/)  几个简单的小tips
     - [Say hello to x64 Assembly [part 1]](http://0xax.blogspot.sg/2014/08/say-hello-to-x64-assembly-part-1.html)  汇编学习笔记，只是看看
+    - [如何成为python高手](http://blogread.cn/it/article/3892) 给出了函数式编程，性能，测试，编码规范的几个资源
+    - [Artificial Neurons and Single-Layer Neural Networks](http://sebastianraschka.com/Articles/2015_singlelayer_neurons.html)人工神经元和单层神经网络，Python示例，很好的深度学习入门教程
+    - [Example Application: A Mention-Level Extraction System](http://deepdive.stanford.edu/doc/basics/walkthrough/walkthrough.html) github上好多python 机器学习相关的项目啊
 
 * 课程教程
     - [概率论与数理统计](http://mooc.study.163.com/course/NJU-1000031001#/info)数学理论与编程应用的完美结合！南京大学课程，网易云课题免费学习，是不是很激动人心那！ 快来报名吧
