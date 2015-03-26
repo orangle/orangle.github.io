@@ -59,6 +59,13 @@ tags: 分享
     - [如何成为python高手](http://blogread.cn/it/article/3892) 给出了函数式编程，性能，测试，编码规范的几个资源
     - [Artificial Neurons and Single-Layer Neural Networks](http://sebastianraschka.com/Articles/2015_singlelayer_neurons.html)人工神经元和单层神经网络，Python示例，很好的深度学习入门教程
     - [Example Application: A Mention-Level Extraction System](http://deepdive.stanford.edu/doc/basics/walkthrough/walkthrough.html) github上好多python 机器学习相关的项目啊
+    - [使用Python Pandas处理亿级数据](http://www.justinablog.com/archives/1357) 对小数据集的测试
+    - [(Faster) Non-Maximum Suppression in Python](http://www.pyimagesearch.com/2015/02/16/faster-non-maximum-suppression-python/) 非极大值做人脸识别
+    - [Python tutorial : Multivariate linear regression to predict house prices](http://nbviewer.ipython.org/github/nmishra/mvregression/blob/master/predict_house_price_python.ipynb)多变量线性回归做房价预测的Python实例，逐步引导的ipython notebook，是学习Scikit-learn、pandas、matplotlib等机器学习相关库的好材料
+    - [Hierarchical Clustering, Heatmaps, and Gridspec](http://py.memect.com/weekly/2015-02-28/#3815322240874700)非常棒的Python下层次化聚类热图(Heatmaps)制作教程，主要利用matplotlib.gridspec和scipy.cluster.hierarchy等，效果相当酷
+    - [编写兼容 Python 2.x 和 3.x 代码的方法](http://python.jobbole.com/81091/) 对于以后需要迁移的程序很有用
+    - [Nuitka ](https://github.com/kayhayen/Nuitka)  一个python的编译器，比cpython要快些，可以把python编译成c代码
+    - [Bayes Prime](http://nbviewer.ipython.org/github/tfolkman/learningwithdata/blob/master/Bayes_Primer.ipynb) 用python讲述贝叶斯定理
 
 * 课程教程
     - [概率论与数理统计](http://mooc.study.163.com/course/NJU-1000031001#/info)数学理论与编程应用的完美结合！南京大学课程，网易云课题免费学习，是不是很激动人心那！ 快来报名吧
