@@ -83,9 +83,9 @@ tags: 分享 网站
     + 回: 是的 因为是和浏览器交互，所以只能http，websocket后来也没尝试。 - 项超
     + 回: 哈哈，这个方案不推荐。累死了。- 黑夜路人
 
-14. Linux下高并发socket最大连接数所受的各种限制 http://blog.sae.sina.com.cn/archives/1988 - 星星bigxing
+14. [Linux下高并发socket最大连接数所受的各种限制](http://blog.sae.sina.com.cn/archives/1988) - 星星bigxing
 
-15. http://m.weibo.cn/3851645388/C9ROf30tz?jumpfrom=weibocom Linux TCP的相关参数梳理总结 - Garfielt-刘卫涛
+15.  [Linux TCP的相关参数梳理总结](http://m.weibo.cn/3851645388/C9ROf30tz?jumpfrom=weibocom) - Garfielt-刘卫涛
 
 16. [构建C1000K的服务器(1)  – 基础]( http://tc.uc.cn/?v=1&src=l4uLj8XQ0IiIiNGWm5qeiIrRkZqL0J2TkJjQno2cl5aJmozQyMvP0ZeLkpM%3D&restype=1&ucshare=1&ucshareplatform=4&country=cn&os=adr&pf=jdaEnfXr%2BcSL152d7OPsuw%3D%3D) - Garfielt-刘卫涛
 
