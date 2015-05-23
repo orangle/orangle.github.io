@@ -54,11 +54,15 @@ UV is 3899
 ```
 
 ### 测试时间工具`line_profiler`
+
 就是这个小工具，安装很simple
+
 ```
 $ pip install line_profiler
 ```
+
 在想要测试的函数上添加一个 `@profile`装饰器（不用倒入任何包，工具会自动倒入）
+
 
 ```
 @profile
@@ -77,6 +81,7 @@ def sts_uv():
 ```
 
 得到结果：
+
 ```
 [root@bogon util]# kernprof -l -v pvsts.py
 Yesterday PV/UV
@@ -106,10 +111,13 @@ Line #      Hits         Time  Per Hit   % Time  Line Contents
     85         1           15     15.0      0.0         print "UV is {0}".format(uv)
     86         1            1      1.0      0.0         return uv
 ```
+
 同时还是会生成一个`pvsts.py.lprof`文件
 
 ### 测试内存使用 `pip install -U memory_profiler`
+
 安装两个工具
+
 ```
 $ pip install -U memory_profiler
 $ pip install psutil
@@ -117,6 +125,7 @@ $ pip install psutil
 使用上也是添加一个 '@profile' 装饰器，跟上面的一样。
 
 测试
+
 ```
 [root@bogon util]# python -m memory_profiler pvsts.py
 Yesterday PV/UV
