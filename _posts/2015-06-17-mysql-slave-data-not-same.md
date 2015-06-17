@@ -224,6 +224,7 @@ mysql> select * from radius.checksums where master_cnt <> this_cnt OR master_crc
 ## 小结
 
 这里主要的问题就是
+
 1 脚本在那里执行（都是在主库服务器，从库只是检查下结果）
 2 怎么建立用户，用户应该给予怎样的权限
 
