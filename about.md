@@ -10,7 +10,7 @@ title: About @orangleliu
 ##jobs list
 * 12.7~13.3 [Yuchengtech](http://www.yuchengtech.com/html/default/index.htm)  **java Dev**
 * 13.11~14.10  [Chinacache](http://www.chinacache.com/)  **Python Dev**
-* 14.10~whenever  [I-erya](http://www.i-erya.com/)   **Python Dev **
+* 14.10~Now  [I-erya](http://www.i-erya.com/)   **Python Dev**
 
 ## you can find me
 * [Github](https://github.com/orangle)
