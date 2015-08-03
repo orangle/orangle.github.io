@@ -1,6 +1,6 @@
 ---
 layout: default
-title:About @orangleliu
+title: 关于 @orangleliu
 ---
 
 ##about
