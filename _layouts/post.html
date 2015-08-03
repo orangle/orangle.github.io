@@ -18,7 +18,7 @@ layout: default
 
 <div class="meta">
     <div class="tags">
-       标签：
+       Tags：
        {% for tag in page.tags %}
            <a href="/tag.html#{{tag}}" class="tag">{{tag}} <span class="tagcount">{{site.tags[tag] | size}}</span></a>
        {% endfor %}
