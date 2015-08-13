@@ -17,6 +17,7 @@ tags: python
 ### 基本
 #### linux `time`
 这是个shell中自带的命令，也是最简单和方面的方法，但是得到信息太少
+
 ```
 [root@bogon util]# time python pvsts.py
 Yesterday PV/UV
@@ -28,6 +29,7 @@ real    2m36.591s  #花费时间
 user    2m37.167s  ＃用户态时间
 sys     0m2.010s   ＃内核态时间
 ```
+
 如果 `sys`+`user` 比 `real` 小的多，就要考虑io等待时间是否过长了。
 
 #### 使用Cprofile工具
@@ -64,7 +66,7 @@ $ pip install line_profiler
 在想要测试的函数上添加一个 `@profile`装饰器（不用倒入任何包，工具会自动倒入）
 
 
-```
+```python
 @profile
 def sts_uv():
         #mac_list = []
@@ -82,7 +84,7 @@ def sts_uv():
 
 得到结果：
 
-```
+```bash
 [root@bogon util]# kernprof -l -v pvsts.py
 Yesterday PV/UV
 
@@ -126,7 +128,7 @@ $ pip install psutil
 
 测试
 
-```
+```bash
 [root@bogon util]# python -m memory_profiler pvsts.py
 Yesterday PV/UV
 
