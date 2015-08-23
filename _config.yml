@@ -7,5 +7,6 @@ url : http://www.orangleliu.info
 language: zh-cn
 encoding: utf-8
 highlighter: pygments
+comments: true
 #pygments: true
 #lsi: true
