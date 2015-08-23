@@ -3,7 +3,7 @@ description: a blog of orangleliu's life and work
 markdown: redcarpet
 redcarpet :
     extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "tables", "with_toc_data"]
-url : http://www.orangleliu.info
+url : http://orangleliu.info
 language: zh-cn
 encoding: utf-8
 highlighter: pygments
