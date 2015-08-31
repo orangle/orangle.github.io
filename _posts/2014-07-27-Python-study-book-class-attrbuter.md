@@ -13,57 +13,59 @@ tags: python 读书
 fget is a function to be used for getting an attribute value, and likewisefset is a function for setting, and fdel a function for del'ing, an attribute.
 可以使用函数的方式也可以使用装饰器的方式来使用
 
-    #!/usr/bin/env python
-    # -*- coding: utf-8 -*-
-    #python2.7x
-    #property.py  @2014-07-26
-    #author: orangleliu
+```python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#python2.7x
+#property.py  @2014-07-26
+#author: orangleliu
 
-    class Person(object):
-        def __init__(self, name):
-            self._name = name
+class Person(object):
+    def __init__(self, name):
+        self._name = name
 
-        def getName(self):
-            print 'fetch....'
-            return self._name
+    def getName(self):
+        print 'fetch....'
+        return self._name
 
-        def setName(self, value):
-            print 'change...'
-            self._name = value
+    def setName(self, value):
+        print 'change...'
+        self._name = value
 
-        def delName(self):
-            print 'remove....'
-            del self._name
+    def delName(self):
+        print 'remove....'
+        del self._name
 
-        #也可以使用装饰器的方式
-        name = property(getName, setName, delName, "name property docs")
+    #也可以使用装饰器的方式
+    name = property(getName, setName, delName, "name property docs")
 
-    bob = Person('Bob')
-    print bob.name
-    print Person.name.__doc__
-    bob.name = 'bob'
-    print bob.name
-    del bob.name
-    #print bob.name
+bob = Person('Bob')
+print bob.name
+print Person.name.__doc__
+bob.name = 'bob'
+print bob.name
+del bob.name
+#print bob.name
 
-    '''
-    并没有想象中的那么好使
+'''
+并没有想象中的那么好使
 
-    #类没有继承object的情况下
-    fetch....
-    Bob
-    name property docs
-    bob
-    set del 就没有使用啊
+#类没有继承object的情况下
+fetch....
+Bob
+name property docs
+bob
+set del 就没有使用啊
 
-    #类继承object的情况下
-    Bob
-    name property docs
-    change...
-    fetch....
-    bob
-    remove....
-    '''
+#类继承object的情况下
+Bob
+name property docs
+change...
+fetch....
+bob
+remove....
+'''
+```
 
 __书中的例子并没有继承object,  使用2.7的版本和书中结果不一致。 需要继承object才能达到预期的结果__
 
@@ -71,34 +73,35 @@ __书中的例子并没有继承object,  使用2.7的版本和书中结果不一
 这里使用装饰的方式， 只要value赋值就进行一个默认的操作，可以看到我们使用属性的方式就可以默认调用函数来处理属性。
 g.value 而不是 g.valueXX()
 
-    #!/usr/bin/env python
-    # -*- coding: utf-8 -*-
-    #python2.7x
-    #property.py  @2014-07-26
-    #author: orangleliu
+```python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#python2.7x
+#property.py  @2014-07-26
+#author: orangleliu
 
-    class GetSquare(object):
-        def __init__(self, num):
-            self.value = num
+class GetSquare(object):
+    def __init__(self, num):
+        self.value = num
 
-        @property
-        def value(self):
-            return self._value
+    @property
+    def value(self):
+        return self._value
 
-        @value.setter
-        def value(self, num):
-            self._value = num**2
+    @value.setter
+    def value(self, num):
+        self._value = num**2
 
-    '''
-    从上面可以看到set属性值的时候作了一些属性的某人动作，有时候很有必要
-    '''
+'''
+从上面可以看到set属性值的时候作了一些属性的某人动作，有时候很有必要
+'''
 
-    g = GetSquare(4)
-    print g.value
+g = GetSquare(4)
+print g.value
 
-    g.value = 10
-    print g.value
-
+g.value = 10
+print g.value
+```
 
 
 
