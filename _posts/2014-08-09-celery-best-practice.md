@@ -1,7 +1,7 @@
 ---
 layout: post
 date: 2014-08-09 20:17:48 +0800
-title:  Celery最佳实践
+title:  Celery最佳实践-正确使用celery的7条建议
 tags: celery 翻译
 ---
 
@@ -28,13 +28,15 @@ tags: celery 翻译
 ###NO.2 使用多个Queues（队列），不要只是使用默认的那个（default）
 Celery的启动是相当的简单，它会启动一个默认的队列，除非你定义了别的队列否则它就会把所有的任务放到这一个队列中去。最常见的就是像下面这样。
 
-    @app.task()
-    def my_taskA(a, b, c):
-        print("doing something here...")
+```bash
+@app.task()
+def my_taskA(a, b, c):
+    print("doing something here...")
 
-    @app.task()
-    def my_taskB(x, y):
-        print("doing something here...")
+@app.task()
+def my_taskB(x, y):
+    print("doing something here...")
+```
 
 两个任务会放到同一个队列中去(如果没有在celeryconfig.py中配置).我能清楚的看到有哪些事发生，因为你那些可人的后台任务上仅仅有那么一个 装饰器。这里我关心的是，也许 taskA 和 taskB做的是完全不同的两件事情，也许其中一个要比另外一个重要的多，那为什么要把它们扔到一个篮子里呢？虽然一个worker可以处理这两个任务，设想某个时间有大量的taskB，然而更重要的 taskA却没有得到worker的足够重视？这种情况下增加了worker以后，所有的worker还是会平等的对待这两种任务，在大量taskB的情况下，taskA还是无法得到应得的重视。 这就把我们带到了下一个要点中。
 
@@ -44,35 +46,43 @@ Celery的启动是相当的简单，它会启动一个默认的队列，除非�
 
 所以，手工的定义队列
 
-    CELERY_QUEUES = (
-        Queue('default', Exchange('default'), routing_key='default'),
-        Queue('for_task_A', Exchange('for_task_A'), routing_key='for_task_A'),
-        Queue('for_task_B', Exchange('for_task_B'), routing_key='for_task_B'),
-    )
+```python
+CELERY_QUEUES = (
+    Queue('default', Exchange('default'), routing_key='default'),
+    Queue('for_task_A', Exchange('for_task_A'), routing_key='for_task_A'),
+    Queue('for_task_B', Exchange('for_task_B'), routing_key='for_task_B'),
+)
+```
 
 你的routes 会决定不同的任务分配到不同的队列
 
-    CELERY_ROUTES = {
-        'my_taskA': {'queue': 'for_task_A', 'routing_key': 'for_task_A'},
-        'my_taskB': {'queue': 'for_task_B', 'routing_key': 'for_task_B'},
-    }
+```python
+CELERY_ROUTES = {
+    'my_taskA': {'queue': 'for_task_A', 'routing_key': 'for_task_A'},
+    'my_taskB': {'queue': 'for_task_B', 'routing_key': 'for_task_B'},
+}
+```
 
 然后你可以为每个任务启动不同的workers
 
-    celery worker -E -l INFO -n workerA -Q for_task_A
-    celery worker -E -l INFO -n workerB -Q for_task_B
+```python
+celery worker -E -l INFO -n workerA -Q for_task_A
+celery worker -E -l INFO -n workerB -Q for_task_B
+```
 
 ###No.4 使用Celery's的错误处理机制
 
 我见过最多就是，任务根本就没有错误处理的概念。如果一个任务失败了就是失败了。在某些情况下这样处理是不错的，然而我见过最多的是一些第三方API的错误，网络原因，或者资源不可用等造成的。最简单的处理这种错误的办法就是对任务进行重试。因为有一些第三方的API是因为服务或者网络的出了问题，但是很快就可以恢复，我们为什么不试一试呢？
 
-    @app.task(bind=True, default_retry_delay=300, max_retries=5)
-    def my_task_A():
-        try:
-            print("doing stuff here...")
-        except SomeNetworkException as e:
-            print("maybe do some clenup here....")
-            self.retry(e)
+```python
+@app.task(bind=True, default_retry_delay=300, max_retries=5)
+def my_task_A():
+    try:
+        print("doing stuff here...")
+    except SomeNetworkException as e:
+        print("maybe do some clenup here....")
+        self.retry(e)
+```
 
 我比较喜欢就是给每个任务定义一个重试的间隔和重试的次数(分别是default_retry_delay和max_retries参数)。这是最基本的错误处理方式也是我见过最多的。当然Celery还提供了很多种处理处理但是我把celery的文档地址留给你。
 

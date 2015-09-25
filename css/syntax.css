@@ -2,7 +2,7 @@
     background-color: #666
 }
 .highlight {
-    background: #222;
+    background: #3A3C42;
     color: #ffffff;
     padding: 0.2em 0.9em;
     margin-bottom: 0.8em;
@@ -18,7 +18,7 @@
 }
 .highlight code, .highlight pre {
     font-family:"Consolas", "Courier New", "Courier", "FreeMono", monospace;
-    font-size:0.95em;
+    /*font-size:0.95em;*/
     margin: 1em 0 1em 0;
     padding:0;
 }

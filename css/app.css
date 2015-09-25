@@ -239,14 +239,14 @@ table {
     padding:10px 0;
 }
 .type code {
-    background:#222;
+    background:#3A3C42;
     color:#FFF;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     -ms-border-radius: 5px;
     -o-border-radius: 5px;
     border-radius: 5px;
-    padding:3px 5px;
+    /*padding:3px 5px;*/
 }
 .site_video{
     width:100%;
@@ -331,7 +331,7 @@ table {
         padding: 50px 0;
     }
     .container {
-        width: 960px;
+        width: 900px;
     }
     .site_video{
         height:575px;
@@ -340,6 +340,6 @@ table {
 /** 1280px __________________________________________________________________________________________________________ */
  @media only screen and (min-width: 1280px) {
     .container {
-        width: 960px;
+        width: 900px;
     }
 }

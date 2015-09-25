@@ -30,22 +30,22 @@ tags: mysql
 只把过程和用到的东西解释了下，有些参数选项等还需要查阅文档。两台机器都是centos6.5 mysql版本都是5.6 , 由于是线上环境，这里ip和密码等敏感信息修改了下。
 
 * 主   192.168.1.100
-* 从   192.168.1.98 
+* 从   192.168.1.98
 * 修复数据库名   radius
 
 ### 工具安装
 
 在`主库服务器`安装
 
-```
+```bash
 #安装依赖包
-# yum install perl-DBI  perl-DBD-MySQL  perl-TermReadKey perl-Time-HiRes
+yum install perl-DBI  perl-DBD-MySQL  perl-TermReadKey perl-Time-HiRes
 
 #安装工具
-# wget percona.com/get/percona-toolkit.tar.gz
-# tar zxvf percona-toolkit-2.2.14.tar.gz
-# cd percona-toolkit-2.2.14
-# perl Makefile.PL && make && make install 
+wget percona.com/get/percona-toolkit.tar.gz
+tar zxvf percona-toolkit-2.2.14.tar.gz
+cd percona-toolkit-2.2.14
+perl Makefile.PL && make && make install
 ```
 
 ### 校验数据一致性
@@ -55,7 +55,7 @@ pt-table-checksum校验数据一致性。
 
 从库mysql操作
 
-```
+```sql
 GRANT SELECT,PROCESS, SUPER, REPLICATION SLAVE ON *.* TO 'checksums'@'192.168.1.100' IDENTIFIED BY 'slavecheck';
 
 flush privileges;
@@ -63,7 +63,7 @@ flush privileges;
 ​
 主库mysql操作
 
-```
+```bash
 GRANT SELECT, PROCESS, SUPER, REPLICATION SLAVE ON *.* TO 'checksums'@'192.168.1.100' IDENTIFIED BY 'slavecheck';
 
 GRANT SELECT,INSERT,UPDATE,DELETE ON radius.checksums TO 'checksums'@'192.168.1.100';
@@ -76,14 +76,14 @@ flush privileges;
 #### pt-table-checksum 校验
 校验是在主库服务器上进行的
 
-```
+```bash
 主库shell中执行
 pt-table-checksum h='192.168.1.100',u='checksums',p='slavecheck',P=3306 -d radius --nocheck-replication-filters --replicate=radius.checksums
 
 --nocheck-replication-filters ：不检查复制过滤器，建议启用。后面可以用--databases来指定需要检查的数据库。
 --no-check-binlog-format      : 不检查复制的binlog模式，要是binlog模式是ROW，则会报错。
 --replicate-check-only :只显示不同步的信息。
---replicate=    ：把checksum的信息写入到指定表中，建议直接写到被检查的数据库当中。 
+--replicate=    ：把checksum的信息写入到指定表中，建议直接写到被检查的数据库当中。
 --databases=    ：指定需要被检查的数据库，多个则用逗号隔开。
 --tables=       ：指定需要被检查的表，多个用逗号隔开
 h=192.168.1.100 ：Master的地址
@@ -98,7 +98,7 @@ P=3306          ：端口
 
 建表语句
 
-```
+```sql
 CREATE TABLE IF NOT EXISTS `radius`.`checksums` (
      db             CHAR(64)     NOT NULL,
      tbl            CHAR(64)     NOT NULL,
@@ -128,7 +128,7 @@ Table radius.checksums does not exist on replica localhost.localdomain
 
 错误解决完了继续执行(结果有省略)
 
-```
+```bash
 下面继续在主库的shell上检查
 [root@localhost portal]# pt-table-checksum h='192.168.1.100',u='checksums',p='slavecheck',P=3306 -d radius --nocheck-replication-filters --replicate=radius.checksums
             TS ERRORS  DIFFS     ROWS  CHUNKS SKIPPED    TIME TABLE
@@ -144,7 +144,8 @@ Table radius.checksums does not exist on replica localhost.localdomain
 ```
 
 出现这种结果，说明已经check了，diffs一栏有不同，说明那些表数据不一致. 现在登录从库的mysql，执行如下语句
-```
+
+```sql
 mysql> select * from radius.checksums where master_cnt <> this_cnt OR master_crc <> this_crc OR ISNULL(master_crc) <> ISNULL(this_crc) \G
 *************************** 1. row ***************************
             db: radius
@@ -168,7 +169,7 @@ upper_boundary: 9225
 
 主库服务器执行
 
-```
+```bash
 [root@localhost portal]# pt-table-sync --execute --replicate radius.checksums --sync-to-master h="192.168.1.98",P=3306,u="checksums",p="slavecheck" --ignore-tables radacct,django_session
 DBI connect(';host=124.88.52.100;port=3306;mysql_read_default_group=client','checksums',...) failed: Access denied for user 'checksums'@'124.88.52.100' (using password: YES) at /usr/local/bin/pt-table-sync line 2220
 但是直接用mysql连接就没问题
@@ -177,7 +178,7 @@ DBI connect(';host=124.88.52.100;port=3306;mysql_read_default_group=client','che
 最后查了下文档，发现还是用户权限的问题。
 从库操作
 
-```
+```sql
 mysql> GRANT all ON radius.* TO 'checksums'@'192.168.1.100';
 Query OK, 0 rows affected (0.00 sec)
 
@@ -187,7 +188,7 @@ Query OK, 0 rows affected (0.00 sec)
 
 主库操作
 
-```
+```sql
 mysql> GRANT all ON radius.* TO 'checksums'@'192.168.1.100';
 Query OK, 0 rows affected (0.00 sec)
 
@@ -202,19 +203,19 @@ Query OK, 0 rows affected (0.00 sec)
 #### 修复数据
 先修复一个不重要的表来实验下(主库操作)
 
-```
-pt-table-sync --execute --replicate radius.checksums --sync-to-master h=192.168.1.98,P=3306,u=checksums,p="slavecheck"  --tables account_smslog,radcheck --print 
+```bash
+pt-table-sync --execute --replicate radius.checksums --sync-to-master h=192.168.1.98,P=3306,u=checksums,p="slavecheck"  --tables account_smslog,radcheck --print
 ```
 
 修复完成在执行一次check 主库操作
 
-```
+```bash
 pt-table-checksum h='192.168.1.100',u='checksums',p='slavecheck',P=3306 -d radius --nocheck-replication-filters --replicate=radius.checksums
 ```
 
 在从库mysql中检查下
 
-```
+```sql
 mysql> select * from radius.checksums where master_cnt <> this_cnt OR master_crc <> this_crc OR ISNULL(master_crc) <> ISNULL(this_crc) \G
 ```
 

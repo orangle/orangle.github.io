@@ -13,7 +13,7 @@ tags: blog
 我的os是win7， pelican v3.5.0.
 
 ```
-    pip install pelican markdown
+pip install pelican markdown
 ```
 
 不管你是用系统的python环境还是 virtualenv 都需要安装必要的组件。根据包依赖应该会装这些packages
@@ -25,14 +25,14 @@ tags: blog
 -  建立一个文件夹用来创建项目
 
 ```
-    D:\code>mkdir ptest
-    D:\code>cd ptest
+D:\code>mkdir ptest
+D:\code>cd ptest
 ```
 
 -  建立一个初始的项目框架
 
 ```
-    D:\code\ptest>pelican-quickstart
+D:\code\ptest>pelican-quickstart
 ```
 
 我这里报错了  **ImportError: No module named html_parser**
@@ -40,27 +40,27 @@ tags: blog
 
 文件是 D:\devsofts\python2.7\lib\site-packages\pelican\readers.py，修改了下面一行
 
-```
-    #from six.moves.html_parser import HTMLParser
-    from HTMLParser import HTMLParser
+```python
+#from six.moves.html_parser import HTMLParser
+from HTMLParser import HTMLParser
 ```
 
 再次执行 D:\code\ptest>pelican-quickstart，会以问题的形式给出很多配置项，根据实际情况回答就行了。
 得到如下的文件目录
 
 ```
-    D:\code\ptest>tree /f
-    文件夹 PATH 列表
-    卷序列号为 0002-FA2E
-    D:.
-    │  develop_server.sh
-    │  fabfile.py
-    │  Makefile
-    │  pelicanconf.py
-    │  publishconf.py
-    │
-    ├─content
-    └─output
+D:\code\ptest>tree /f
+文件夹 PATH 列表
+卷序列号为 0002-FA2E
+D:.
+│  develop_server.sh
+│  fabfile.py
+│  Makefile
+│  pelicanconf.py
+│  publishconf.py
+│
+├─content
+└─output
 ```
 
 对于刚才问答形式的配置，还可以在这些配置文件中更改。
@@ -73,85 +73,85 @@ pelican支持.rst, .md, .html 等文件,以及对应的格式， 还可以添加
 在content中添加一个 test.md文件
 
 ```
-    Title: HI baby！
-    Date: 2015-01-25 10:20
-    Modified: 2015-01-25 10:20
-    Category: Python
-    Tags: pelican, publishing
-    Slug: my-super-post
-    Authors: Orangleliu
-    Summary: Short version for index and feeds
-    ##第一篇测试
-     - markdown语法
+Title: HI baby！
+Date: 2015-01-25 10:20
+Modified: 2015-01-25 10:20
+Category: Python
+Tags: pelican, publishing
+Slug: my-super-post
+Authors: Orangleliu
+Summary: Short version for index and feeds
+##第一篇测试
+ - markdown语法
 ```
 
 目录结构现在是这样子
 
 ```
-    D:\code\ptest>tree /f
-    文件夹 PATH 列表
-    卷序列号为 0002-FA2E
-    D:.
-    │  develop_server.sh
-    │  fabfile.py
-    │  Makefile
-    │  pelicanconf.py
-    │  publishconf.py
-    │
-    ├─content
-    │      test.md
-    │
-    └─output
+D:\code\ptest>tree /f
+文件夹 PATH 列表
+卷序列号为 0002-FA2E
+D:.
+│  develop_server.sh
+│  fabfile.py
+│  Makefile
+│  pelicanconf.py
+│  publishconf.py
+│
+├─content
+│      test.md
+│
+└─output
 ```
 
 - 生成html
 使用命令,也可以通过命令指定其他的静态文件生成路径
 
 ```
-    D:\code\ptest>pelican content/
+D:\code\ptest>pelican content/
 ```
 
 在output目录中就生成了如下的文件
 
 ```
-    └─output
-        │  archives.html
-        │  authors.html
-        │  categories.html
-        │  index.html
-        │  my-super-post.html
-        │  tags.html
+└─output
+    │  archives.html
+    │  authors.html
+    │  categories.html
+    │  index.html
+    │  my-super-post.html
+    │  tags.html
+    │
+    ├─author
+    │      orangleliu.html
+    │
+    ├─category
+    │      python.html
+    │
+    ├─tag
+    │      pelican.html
+    │      publishing.html
+    │
+    └─theme
+        ├─css
+        │      main.css
+        │      pygment.css
+        │      reset.css
+        │      typogrify.css
+        │      wide.css
         │
-        ├─author
-        │      orangleliu.html
-        │
-        ├─category
-        │      python.html
-        │
-        ├─tag
-        │      pelican.html
-        │      publishing.html
-        │
-        └─theme
-            ├─css
-            │      main.css
-            │      pygment.css
-            │      reset.css
-            │      typogrify.css
-            │      wide.css
-            │
-            └─images
-                └─icons
-                        aboutme.png
+        └─images
+            └─icons
+                    aboutme.png
 ```
 
 ##本地查看
 
 ```
-    D:\code\ptest>cd output
+D:\code\ptest>cd output
 
-    D:\code\ptest\output>python -m SimpleHTTPServer
-    Serving HTTP on 0.0.0.0 port 8000 ...
+D:\code\ptest\output>python -m SimpleHTTPServer
+Serving HTTP on 0.0.0.0 port 8000 ...
 ```
 
 [http://127.0.0.1:8000/](http://127.0.0.1:8000/)就可以在本地查看生成的博客了。
