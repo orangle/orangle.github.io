@@ -1,7 +1,7 @@
 ---
 layout: post
 date: 2015-10-14 18:17:48 +0800
-title: lzz的编程之旅2015-pycon
+title: lzz的编程之旅2015-Pycon
 tags: live
 ---
 
