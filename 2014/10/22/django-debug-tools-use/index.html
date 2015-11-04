@@ -37,11 +37,13 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="celery," />
+  <meta name="keywords" content="debug," />
 
 
 
 
+
+  <link rel="alternate" href="/atom.xml" title="Orangleliu Notes" type="application/atom+xml" />
 
 
 
@@ -53,16 +55,28 @@
 
 
 
-<meta name="description" content="celery实践经验">
+<meta name="description" content="用django开发很快也很容易，但是很多时候我们的经验并不是很足，就会给自己挖下很多坑，不管是性能问题，还是开发语言使用技巧问题都会给应用的稳定带来危害， 开发之后的调试和调优就显得很重要，今天就尝试使用django-debug-toolbar来给我们的开发增加更多的调试和监控。之前只是听说过，没有具体应用过。
+
+我这里是python1.6。  1.7的配置有点小改动，具体看文档)。
+安装使用pi">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Celery最佳实践-正确使用celery的7条建议">
-<meta property="og:url" content="http://orangleliu.info/2015/11/04/celery-best-practice/index.html">
+<meta property="og:title" content="django-debug-tools 使用">
+<meta property="og:url" content="http://orangleliu.info/2014/10/22/django-debug-tools-use/index.html">
 <meta property="og:site_name" content="Orangleliu Notes">
-<meta property="og:description" content="celery实践经验">
-<meta property="og:updated_time" content="2015-11-04T10:20:24.000Z">
+<meta property="og:description" content="用django开发很快也很容易，但是很多时候我们的经验并不是很足，就会给自己挖下很多坑，不管是性能问题，还是开发语言使用技巧问题都会给应用的稳定带来危害， 开发之后的调试和调优就显得很重要，今天就尝试使用django-debug-toolbar来给我们的开发增加更多的调试和监控。之前只是听说过，没有具体应用过。
+
+我这里是python1.6。  1.7的配置有点小改动，具体看文档)。
+安装使用pi">
+<meta property="og:image" content="http://orangleliu.info/img/django_debug1.png">
+<meta property="og:image" content="http://orangleliu.info/img/django_debug2.png">
+<meta property="og:image" content="http://orangleliu.info/img/django_debug3.png">
+<meta property="og:updated_time" content="2015-11-04T12:27:25.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Celery最佳实践-正确使用celery的7条建议">
-<meta name="twitter:description" content="celery实践经验">
+<meta name="twitter:title" content="django-debug-tools 使用">
+<meta name="twitter:description" content="用django开发很快也很容易，但是很多时候我们的经验并不是很足，就会给自己挖下很多坑，不管是性能问题，还是开发语言使用技巧问题都会给应用的稳定带来危害， 开发之后的调试和调优就显得很重要，今天就尝试使用django-debug-toolbar来给我们的开发增加更多的调试和监控。之前只是听说过，没有具体应用过。
+
+我这里是python1.6。  1.7的配置有点小改动，具体看文档)。
+安装使用pi">
 
 
 
@@ -74,7 +88,7 @@
   };
 </script>
 
-  <title> Celery最佳实践-正确使用celery的7条建议 | Orangleliu Notes </title>
+  <title> django-debug-tools 使用 | Orangleliu Notes </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -109,7 +123,7 @@
       <span class="logo-line-after"><i></i></span>
     </a>
   </div>
-  <p class="site-subtitle"></p>
+  <p class="site-subtitle">爱生活，Linux，Python，和媳妇</p>
 </div>
 
 <div class="site-nav-toggle">
@@ -214,7 +228,7 @@
             
             
               
-                Celery最佳实践-正确使用celery的7条建议
+                django-debug-tools 使用
               
             
           </h1>
@@ -223,8 +237,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-11-04T18:17:29+08:00" content="2015-11-04">
-              2015-11-04
+            <time itemprop="dateCreated" datetime="2014-10-22T12:58:48+08:00" content="2014-10-22">
+              2014-10-22
             </time>
           </span>
 
@@ -233,8 +247,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/翻译/" itemprop="url" rel="index">
-                    <span itemprop="name">翻译</span>
+                  <a href="/categories/django/" itemprop="url" rel="index">
+                    <span itemprop="name">django</span>
                   </a>
                 </span>
 
@@ -249,8 +263,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2015/11/04/celery-best-practice/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/11/04/celery-best-practice/" itemprop="commentsCount"></span>
+              <a href="/2014/10/22/django-debug-tools-use/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/10/22/django-debug-tools-use/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -269,35 +283,46 @@
       
 
       
-        <span itemprop="articleBody"><blockquote>
-<p><a href="http://blog.csdn.net/orangleliu" target="_blank" rel="external">orangleliu</a> 翻译  <a href="https://denibertovic.com/posts/celery-best-practices/" target="_blank" rel="external">原文点击查看</a></p>
+        <span itemprop="articleBody"> <a id="more"></a>
+<blockquote>
+<p>用django开发很快也很容易，但是很多时候我们的经验并不是很足，就会给自己挖下很多坑，不管是性能问题，还是开发语言使用技巧问题都会给应用的稳定带来危害， 开发之后的调试和调优就显得很重要，今天就尝试使用django-debug-toolbar来给我们的开发增加更多的调试和监控。之前只是听说过，没有具体应用过。</p>
 </blockquote>
-<p> 如果你的工作和 <a href="https://www.djangoproject.com/" target="_blank" rel="external">Django</a> 相关, 并且有时候需要执行一些长时间的后台任务。可能你已经使用了某种任务队列，<a href="http://www.celeryproject.org/" target="_blank" rel="external">Celery</a>就是Python（和Django）世界中时下解决类似问题最受欢迎的项目。</p>
-<p>当在某些项目使用Celery作为任务队列之后，我总结了一些最佳实践，决定把它们些下来。然而，这里也有一些对自己应该做的却没做的反思，还有一些celery提供但是没有充分利用的功能。</p>
-<h3 id="No-1_不要使用关系型数据库来作为AMQP的代理">No.1  不要使用关系型数据库来作为AMQP的代理</h3><p>让我来解释下我为什么觉得这是错的。</p>
-<p>关系型数据库不像RabbitMQ一样专门作为AMQP代理而设计。它会在某个时间点挂掉，可能在生产中没法那么基于 传输/用户。</p>
-<p>我猜测人们使用关系型数据库的最大原因是，已经有了一个数据库为web应用工作，为啥不复用呢。配置非常简单并且你不需要在担心其他的组件（像RabbitMQ）</p>
-<p>假设这样的场景：你有4个后台工作的进程，你把这些任务放到数据库中。这意味着有四个进程相当频繁地去数据库轮询，检查是否有新的任务，这还不包括这4个进程本身也是多个进程。在某些时刻你会发现你的任务进程很慢，有些任务还没处理就有更多的任务进来了，你就自然的增加worker来处理任务。大量的worker为了获取新任务轮询数据库，导致数据库突然变慢，磁盘IO达到瓶颈，你的web应用也会受此影响变得越来越慢，因为这些worker正在对数据库进行基本的DDOS 攻击。</p>
-<p>当你有一个像RabbitMQ这样的AMQP代理的时候，这些情况就不会发生了，因为这些队列是存在于内存当中，所以也不会伤害到你的硬盘。这些worker不需要频繁的轮询，因为队列会把新的任务推送给worker，如果AMQP因为某些原因不能工作了，至少不会影响到web应用的所有使用。</p>
-<p>我不得不说你也不应该在开发环境中使用关系型数据库来作为代理，像Docker和预先建立好的镜像都能给你一个沙盒中的RabbitMQ环境使用。</p>
-<h3 id="NO-2_使用多个Queues（队列），不要只是使用默认的那个（default）">NO.2 使用多个Queues（队列），不要只是使用默认的那个（default）</h3><p>Celery的启动是相当的简单，它会启动一个默认的队列，除非你定义了别的队列否则它就会把所有的任务放到这一个队列中去。最常见的就是像下面这样。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@app.task()</span><br><span class="line">def my_taskA(a, b, c):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"doing something here..."</span>)</span><br><span class="line"></span><br><span class="line">@app.task()</span><br><span class="line">def my_taskB(x, y):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"doing something here..."</span>)</span><br></pre></td></tr></table></figure>
-<p>两个任务会放到同一个队列中去(如果没有在celeryconfig.py中配置).我能清楚的看到有哪些事发生，因为你那些可人的后台任务上仅仅有那么一个 装饰器。这里我关心的是，也许 taskA 和 taskB做的是完全不同的两件事情，也许其中一个要比另外一个重要的多，那为什么要把它们扔到一个篮子里呢？虽然一个worker可以处理这两个任务，设想某个时间有大量的taskB，然而更重要的 taskA却没有得到worker的足够重视？这种情况下增加了worker以后，所有的worker还是会平等的对待这两种任务，在大量taskB的情况下，taskA还是无法得到应得的重视。 这就把我们带到了下一个要点中。</p>
-<h3 id="NO-3_使用优先级wokers">NO.3 使用优先级wokers</h3><p>解决上面问题办法就是把taskA放到一个队列中去，taskB放到另一个队列中去，分配x个workers去处理Q1队列，有于Q2队列有更多的任务需要处理，其他的workers都分配给Q2队列。这种方式你能保证taskB有足够多的workers去，同时维持几个高优先级的队列给taskA，当taskA任务来的时候不需要等待很久就可以被处理掉。</p>
-<p>所以，手工的定义队列</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CELERY_QUEUES = (</span><br><span class="line">    Queue(<span class="string">'default'</span>, Exchange(<span class="string">'default'</span>), routing_key=<span class="string">'default'</span>),</span><br><span class="line">    Queue(<span class="string">'for_task_A'</span>, Exchange(<span class="string">'for_task_A'</span>), routing_key=<span class="string">'for_task_A'</span>),</span><br><span class="line">    Queue(<span class="string">'for_task_B'</span>, Exchange(<span class="string">'for_task_B'</span>), routing_key=<span class="string">'for_task_B'</span>),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<p>你的routes 会决定不同的任务分配到不同的队列</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CELERY_ROUTES = &#123;</span><br><span class="line">    <span class="string">'my_taskA'</span>: &#123;<span class="string">'queue'</span>: <span class="string">'for_task_A'</span>, <span class="string">'routing_key'</span>: <span class="string">'for_task_A'</span>&#125;,</span><br><span class="line">    <span class="string">'my_taskB'</span>: &#123;<span class="string">'queue'</span>: <span class="string">'for_task_B'</span>, <span class="string">'routing_key'</span>: <span class="string">'for_task_B'</span>&#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>然后你可以为每个任务启动不同的workers</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">celery worker -E -l INFO -n workerA -Q for_task_A</span><br><span class="line">celery worker -E -l INFO -n workerB -Q for_task_B</span><br></pre></td></tr></table></figure>
-<h3 id="No-4_使用Celery’s的错误处理机制">No.4 使用Celery’s的错误处理机制</h3><p>我见过最多就是，任务根本就没有错误处理的概念。如果一个任务失败了就是失败了。在某些情况下这样处理是不错的，然而我见过最多的是一些第三方API的错误，网络原因，或者资源不可用等造成的。最简单的处理这种错误的办法就是对任务进行重试。因为有一些第三方的API是因为服务或者网络的出了问题，但是很快就可以恢复，我们为什么不试一试呢？</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="decorator">@app.task(bind=True, default_retry_delay=300, max_retries=5)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">my_task_A</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        print(<span class="string">"doing stuff here..."</span>)</span><br><span class="line">    <span class="keyword">except</span> SomeNetworkException <span class="keyword">as</span> e:</span><br><span class="line">        print(<span class="string">"maybe do some clenup here...."</span>)</span><br><span class="line">        self.retry(e)</span><br></pre></td></tr></table></figure>
-<p>我比较喜欢就是给每个任务定义一个重试的间隔和重试的次数(分别是default_retry_delay和max_retries参数)。这是最基本的错误处理方式也是我见过最多的。当然Celery还提供了很多种处理处理但是我把celery的文档地址留给你。</p>
-<h3 id="No-5_使用Flower">No.5 使用Flower</h3><p><a href="http://celery.readthedocs.org/en/latest/userguide/monitoring.html#flower-real-time-celery-web-monitor" target="_blank" rel="external">Flower</a> 是一个非常棒的工具，它可以用来监控celery的任务和workers。它是基于web的，所以你可以看到任务进程，详情，worker状态，启动新的workers等。可以通过前面的链接查看它所有的功能。</p>
-<h3 id="No-6_只有真正需要才追踪task的结果">No.6 只有真正需要才追踪task的结果</h3><p>task状态指的是task执行的结果是成功还是失败。它对于后续的某些分析是有用的。需要注意的一个问题是退出结果并不是任务执行的结果，那些信息更类似于对数据的某些影响（例如更新用户的朋友列表）</p>
-<p>项目中我见过最多的是不关心这些任务执行时候的状态，有些只是用默认的sqlite数据库在保存这些信息，更好一点的是花时间保存在常规的数据库中（例如postgres 或者其他数据库）</p>
-<p>为什么无缘无故的增加web应用数据库的负担呢？使用CELERY_IGNORE_RESULT = True配置在你的celeryconfig.py配置文件中来丢弃这些执行状态。</p>
-<h3 id="No-7_不要通过数据库或者ORM对象的方式来执行任务">No.7 不要通过数据库或者ORM对象的方式来执行任务</h3><p>在一次本地的Python小聚会上发表这个分享之后有几个人建议我把这一条添加到最佳实践的列表中。这个建议是关于什么的呢？不要通过数据库对象（例如你的User model）来执行后台任务，因为对象序列话是包含了一些陈旧的数据。你要作的是把Userid放在任务中，然后任务执行的时候会从数据中获取最新的用户对象。</p>
+<p>我这里是python1.6。  1.7的配置有点小改动，具体看<a href="(http://django-debug-toolbar.readthedocs.org/en/1.2/installation.html">文档</a>)。</p>
+<h2 id="安装">安装</h2><p>使用pip安装</p>
+<pre><code><span class="title">pip</span> install django-<span class="built_in">debug</span>-toolbar
+</code></pre><p><a href="http://django-debug-toolbar.readthedocs.org/en/1.2/installation.html" target="_blank" rel="external">参考地址</a></p>
+<h2 id="配置">配置</h2><h3 id="基本配置">基本配置</h3><p>修改settings.py 中的配置</p>
+<p>添加app，INSTALLED_APPS添加</p>
+<pre><code><span class="title">INSTALLED_APPS</span> = (
+    <span class="comment"># ...</span>
+    <span class="string">'django.contrib.staticfiles'</span>,
+    <span class="comment"># ...</span>
+    <span class="comment"># If you're using Django 1.7.x or later</span>
+    <span class="string">'debug_toolbar.apps.DebugToolbarConfig'</span>,
+    <span class="comment"># If you're using Django 1.6.x or earlier</span>
+    <span class="string">'debug_toolbar'</span>,
+)
+</code></pre><p>还要设置成debug模式</p>
+<pre><code><span class="setting">DEBUG = <span class="value"><span class="keyword">True</span></span></span>
+</code></pre><p>文档中说这种配置方式使用runserver 可以，但是其他方式启动可能需要就要更多的配置了。<br><a href="http://django-debug-toolbar.readthedocs.org/en/1.2/installation.html#explicit-setup" target="_blank" rel="external">详细参照</a></p>
+<p>还有一些高级的自定义配置 <a href="http://django-debug-toolbar.readthedocs.org/en/1.2/configuration.html" target="_blank" rel="external">configuration.</a></p>
+<p><a href="http://django-debug-toolbar.readthedocs.org/en/1.2/index.html" target="_blank" rel="external">更多更详细的配置</a></p>
+<h2 id="使用">使用</h2><p>这里我们就使用默认的配置</p>
+<p>启动django的开发服务器。 进入项目中</p>
+<ul>
+<li><p>发现浏览的又上方有个图标,如下图：<br><img src="/img/django_debug1.png" alt="django-debug" title="django"></p>
+</li>
+<li><p>点击图标可以看到debug的一些选项如下图。<br><img src="/img/django_debug2.png" alt="django-debug" title="django"></p>
+</li>
+<li><p>我们来查看下sql的执行（下图），可以看到sql的执行总时间，多少条，每个sql的执行时间，sql语句等等。 还是很详细的。<br><img src="/img/django_debug3.png" alt="django-debug" title="django"></p>
+</li>
+</ul>
+<h2 id="小结">小结</h2><p>从试用的角度来看，debug-tool还是很强大的，给我们的开发和调试带来很多的方面。</p>
+<h2 id="jquery配置">jquery配置</h2><p>今天使用的时候发现里面默认的jquery配置是google的cdn，由于f的原因，我们在settings中配置一个非国外的源</p>
+<pre><code>DEBUG_TOOLBAR_CONFIG = {
+    <span class="string">'JQUERY_URL'</span> : <span class="string">"http://code.jquery.com/jquery-2.1.1.min.js"</span>
+}
+</code></pre><p>这样就可以正常使用了。</p>
 </span>
       
     </div>
@@ -306,7 +331,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/celery/" rel="tag">#celery</a>
+            <a href="/tags/debug/" rel="tag">#debug</a>
           
         </div>
       
@@ -315,13 +340,17 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/11/04/hexo-blog-notes/" rel="next" title="hexo 博客使用记">
-                <i class="fa fa-chevron-left"></i> hexo 博客使用记
+              <a href="/2014/08/15/Django-orm-get-filter-differ/" rel="next" title="Django的orm中get和filter的不同">
+                <i class="fa fa-chevron-left"></i> Django的orm中get和filter的不同
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2014/10/24/django-use-mutil-thread-async/" rel="prev" title="django 利用多线程处理异步任务">
+                django 利用多线程处理异步任务 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -389,31 +418,38 @@
           <img class="site-author-image" src="https://avatars3.githubusercontent.com/u/2696746?v=3&s=460" alt="orangleliu" itemprop="image"/>
           <p class="site-author-name" itemprop="name">orangleliu</p>
         </div>
-        <p class="site-description motion-element" itemprop="description">orangleliu的博客，生活，Linux，Python，程序</p>
+        <p class="site-description motion-element" itemprop="description">lzz的编程之旅</p>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-count">16</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-count">7</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-count">12</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
 
         </nav>
 
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
         
 
         <div class="links-of-author motion-element">
@@ -439,7 +475,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#No-1_不要使用关系型数据库来作为AMQP的代理"><span class="nav-number">1.</span> <span class="nav-text">No.1  不要使用关系型数据库来作为AMQP的代理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NO-2_使用多个Queues（队列），不要只是使用默认的那个（default）"><span class="nav-number">2.</span> <span class="nav-text">NO.2 使用多个Queues（队列），不要只是使用默认的那个（default）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NO-3_使用优先级wokers"><span class="nav-number">3.</span> <span class="nav-text">NO.3 使用优先级wokers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#No-4_使用Celery’s的错误处理机制"><span class="nav-number">4.</span> <span class="nav-text">No.4 使用Celery’s的错误处理机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#No-5_使用Flower"><span class="nav-number">5.</span> <span class="nav-text">No.5 使用Flower</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#No-6_只有真正需要才追踪task的结果"><span class="nav-number">6.</span> <span class="nav-text">No.6 只有真正需要才追踪task的结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#No-7_不要通过数据库或者ORM对象的方式来执行任务"><span class="nav-number">7.</span> <span class="nav-text">No.7 不要通过数据库或者ORM对象的方式来执行任务</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置"><span class="nav-number">2.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本配置"><span class="nav-number">2.1.</span> <span class="nav-text">基本配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用"><span class="nav-number">3.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jquery配置"><span class="nav-number">5.</span> <span class="nav-text">jquery配置</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
@@ -499,9 +535,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'orangleliunotes';
-      var disqus_identifier = '2015/11/04/celery-best-practice/';
-      var disqus_title = 'Celery最佳实践-正确使用celery的7条建议';
-      var disqus_url = 'http://orangleliu.info/2015/11/04/celery-best-practice/';
+      var disqus_identifier = '2014/10/22/django-debug-tools-use/';
+      var disqus_title = 'django-debug-tools 使用';
+      var disqus_url = 'http://orangleliu.info/2014/10/22/django-debug-tools-use/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');

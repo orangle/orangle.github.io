@@ -1,0 +1,786 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+    <link href='//fonts.lug.ustc.edu.cn/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="mysql," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Orangleliu Notes" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="情况时这样的昨天晚上主动2个机器都迁移了，然后今天才把主动重新连接上，但是从库的偏移量是从今天当前时刻开始的，也就是说虽然现在主动看似正常，其实是少了昨天的部分数据，由于从库的数据丢失了，早晚还是要填坑的。
+
+问题
+要解决问题就是怎么对比不一致，然后在不影响业务的情况下，修复数据不一致的问题，把从库缺少的数据补上
+
+下面是能想到和找到的几个方案
+
+从新从0开始同步，虽然对主库的使用没有影响，但是那">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql主从数据不一致问题解决过程">
+<meta property="og:url" content="http://orangleliu.info/2015/06/17/mysql-slave-data-not-same/index.html">
+<meta property="og:site_name" content="Orangleliu Notes">
+<meta property="og:description" content="情况时这样的昨天晚上主动2个机器都迁移了，然后今天才把主动重新连接上，但是从库的偏移量是从今天当前时刻开始的，也就是说虽然现在主动看似正常，其实是少了昨天的部分数据，由于从库的数据丢失了，早晚还是要填坑的。
+
+问题
+要解决问题就是怎么对比不一致，然后在不影响业务的情况下，修复数据不一致的问题，把从库缺少的数据补上
+
+下面是能想到和找到的几个方案
+
+从新从0开始同步，虽然对主库的使用没有影响，但是那">
+<meta property="og:updated_time" content="2015-11-04T12:03:31.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mysql主从数据不一致问题解决过程">
+<meta name="twitter:description" content="情况时这样的昨天晚上主动2个机器都迁移了，然后今天才把主动重新连接上，但是从库的偏移量是从今天当前时刻开始的，也就是说虽然现在主动看似正常，其实是少了昨天的部分数据，由于从库的数据丢失了，早晚还是要填坑的。
+
+问题
+要解决问题就是怎么对比不一致，然后在不影响业务的情况下，修复数据不一致的问题，把从库缺少的数据补上
+
+下面是能想到和找到的几个方案
+
+从新从0开始同步，虽然对主库的使用没有影响，但是那">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> mysql主从数据不一致问题解决过程 | Orangleliu Notes </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Orangleliu Notes</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">爱生活，Linux，Python，和媳妇</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                mysql主从数据不一致问题解决过程
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2015-06-17T17:49:30+08:00" content="2015-06-17">
+              2015-06-17
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/06/17/mysql-slave-data-not-same/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/06/17/mysql-slave-data-not-same/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"> <a id="more"></a>
+<blockquote>
+<p>情况时这样的<br>昨天晚上主动2个机器都迁移了，然后今天才把主动重新连接上，但是从库的偏移量是从今天当前时刻开始的，也就是说虽然现在主动看似正常，其实是少了昨天的部分数据，由于从库的数据丢失了，早晚还是要填坑的。</p>
+</blockquote>
+<h2 id="问题">问题</h2><ul>
+<li>要解决问题就是怎么对比不一致，然后在不影响业务的情况下，修复数据不一致的问题，把从库缺少的数据补上</li>
+</ul>
+<p>下面是能想到和找到的几个方案</p>
+<ol>
+<li>从新从0开始同步，虽然对主库的使用没有影响，但是那么大的数据量，对性能，网络影响有点大，数据丢失的应该很少</li>
+<li>主库dump数据，锁库，然后同步，不好。 影响业务使用</li>
+<li>percona-toolkit 中的工具来校验和同步，从介绍上来看是符合现在的情况的，使用上还需要学习和认识才行。</li>
+</ol>
+<p>下面是几个参考链接</p>
+<ul>
+<li><a href="https://www.percona.com/software/percona-toolkit" target="_blank" rel="external">percona-toolkit工具</a> 官方地址</li>
+<li><a href="http://huoding.com/2013/05/03/251" target="_blank" rel="external">MySQL主从服务器数据一致性的核对与修复</a>  简单描述下过程</li>
+<li><a href="http://nettedfish.sinaapp.com/blog/2013/06/04/check-replication-consistency-by-pt-table-checksum/" target="_blank" rel="external">用pt-table-checksum校验数据一致性</a>  描述工具原理</li>
+<li><a href="http://nettedfish.sinaapp.com/blog/2013/06/05/synchronizes-data-efficiently-by-pt-table-sync/" target="_blank" rel="external">用pt-table-sync修复不一致的数据</a> 描述了工具原理</li>
+</ul>
+<h2 id="操作过程">操作过程</h2><p>只把过程和用到的东西解释了下，有些参数选项等还需要查阅文档。两台机器都是centos6.5 mysql版本都是5.6 , 由于是线上环境，这里ip和密码等敏感信息修改了下。</p>
+<ul>
+<li>主   192.168.1.100</li>
+<li>从   192.168.1.98</li>
+<li>修复数据库名   radius</li>
+</ul>
+<h3 id="工具安装">工具安装</h3><p>在<code>主库服务器</code>安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#安装依赖包</span></span><br><span class="line">yum install perl-DBI  perl-DBD-MySQL  perl-TermReadKey perl-Time-HiRes</span><br><span class="line"></span><br><span class="line"><span class="comment">#安装工具</span></span><br><span class="line">wget percona.com/get/percona-toolkit.tar.gz</span><br><span class="line">tar zxvf percona-toolkit-<span class="number">2.2</span>.<span class="number">14</span>.tar.gz</span><br><span class="line"><span class="built_in">cd</span> percona-toolkit-<span class="number">2.2</span>.<span class="number">14</span></span><br><span class="line">perl Makefile.PL &amp;&amp; make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<h3 id="校验数据一致性">校验数据一致性</h3><h4 id="建立用户并授权">建立用户并授权</h4><p>注意这里要在主从创建一个同名的用户，可以从主库访问从库，主库本地可以访问主库。工具的使用都是在主库的服务器上进行,使用<br>pt-table-checksum校验数据一致性。</p>
+<p>从库mysql操作</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">GRANT</span> <span class="keyword">SELECT</span>,PROCESS, SUPER, <span class="keyword">REPLICATION</span> <span class="keyword">SLAVE</span> <span class="keyword">ON</span> *.* <span class="keyword">TO</span> <span class="string">'checksums'</span>@<span class="string">'192.168.1.100'</span> <span class="keyword">IDENTIFIED</span> <span class="keyword">BY</span> <span class="string">'slavecheck'</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">flush</span> <span class="keyword">privileges</span>;</span></span><br></pre></td></tr></table></figure>
+<p>​<br>主库mysql操作</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GRANT SELECT, PROCESS, SUPER, REPLICATION SLAVE ON *.* TO <span class="string">'checksums'</span>@<span class="string">'192.168.1.100'</span> IDENTIFIED BY <span class="string">'slavecheck'</span>;</span><br><span class="line"></span><br><span class="line">GRANT SELECT,INSERT,UPDATE,DELETE ON radius.checksums TO <span class="string">'checksums'</span>@<span class="string">'192.168.1.100'</span>;</span><br><span class="line"></span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
+<p>校验时候需要在主mysql 中新建一张表，新建用户需要有读写的权限，这里是把校验表建立在radius库中。</p>
+<h4 id="pt-table-checksum_校验">pt-table-checksum 校验</h4><p>校验是在主库服务器上进行的</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">主库shell中执行</span><br><span class="line">pt-table-checksum h=<span class="string">'192.168.1.100'</span>,u=<span class="string">'checksums'</span>,p=<span class="string">'slavecheck'</span>,P=<span class="number">3306</span> <span class="operator">-d</span> radius --nocheck-replication-filters --replicate=radius.checksums</span><br><span class="line"></span><br><span class="line">--nocheck-replication-filters ：不检查复制过滤器，建议启用。后面可以用--databases来指定需要检查的数据库。</span><br><span class="line">--no-check-binlog-format      : 不检查复制的binlog模式，要是binlog模式是ROW，则会报错。</span><br><span class="line">--replicate-check-only :只显示不同步的信息。</span><br><span class="line">--replicate=    ：把checksum的信息写入到指定表中，建议直接写到被检查的数据库当中。</span><br><span class="line">--databases=    ：指定需要被检查的数据库，多个则用逗号隔开。</span><br><span class="line">--tables=       ：指定需要被检查的表，多个用逗号隔开</span><br><span class="line">h=<span class="number">192.168</span>.<span class="number">1.100</span> ：Master的地址</span><br><span class="line">u=checksums         ：用户名</span><br><span class="line">p=slavecheck        ：密码</span><br><span class="line">P=<span class="number">3306</span>          ：端口</span><br></pre></td></tr></table></figure>
+<p>这个脚本在主库机器上运行，会自动找到从库地址，并用相同的用户登录，然后对比。</p>
+<p>–replicate 选项是建立一个表来存储对比信息，这个表一定要能同步到从库中，如果checksums用户没有建表权限，请自行建立好表</p>
+<p>建表语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> <span class="string">`radius`</span>.<span class="string">`checksums`</span> (</span><br><span class="line">     db             <span class="built_in">CHAR</span>(<span class="number">64</span>)     <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">     tbl            <span class="built_in">CHAR</span>(<span class="number">64</span>)     <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">     <span class="keyword">chunk</span>          <span class="built_in">INT</span>          <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">     chunk_time     <span class="built_in">FLOAT</span>            <span class="literal">NULL</span>,</span><br><span class="line">     chunk_index    <span class="built_in">VARCHAR</span>(<span class="number">200</span>)     <span class="literal">NULL</span>,</span><br><span class="line">     lower_boundary <span class="built_in">TEXT</span>             <span class="literal">NULL</span>,</span><br><span class="line">     upper_boundary <span class="built_in">TEXT</span>             <span class="literal">NULL</span>,</span><br><span class="line">     this_crc       <span class="built_in">CHAR</span>(<span class="number">40</span>)     <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">     this_cnt       <span class="built_in">INT</span>          <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">     master_crc     <span class="built_in">CHAR</span>(<span class="number">40</span>)         <span class="literal">NULL</span>,</span><br><span class="line">     master_cnt     <span class="built_in">INT</span>              <span class="literal">NULL</span>,</span><br><span class="line">     ts             <span class="keyword">TIMESTAMP</span>    <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="keyword">CURRENT_TIMESTAMP</span> <span class="keyword">ON</span> <span class="keyword">UPDATE</span> <span class="keyword">CURRENT_TIMESTAMP</span>,</span><br><span class="line">     PRIMARY <span class="keyword">KEY</span> (db, tbl, <span class="keyword">chunk</span>),</span><br><span class="line">     <span class="keyword">INDEX</span> ts_db_tbl (ts, db, tbl)</span><br><span class="line">  ) <span class="keyword">ENGINE</span>=<span class="keyword">INNODB</span>;</span></span><br></pre></td></tr></table></figure>
+<p>我这里手动建立好表之后出现了如下的错误</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">6</span>-<span class="number">16</span>T16:<span class="number">10</span>:<span class="number">48</span> The <span class="comment">--replicate table `radius`.`checksums` exists on the master but but it has problems on these replicas:</span></span><br><span class="line">Table radius.checksums <span class="keyword">does</span> <span class="keyword">not</span> exist <span class="function_start"><span class="keyword">on</span></span> replica localhost.localdomain</span><br></pre></td></tr></table></figure>
+<p>之前的错误，导致主从复制有问题，去从库查看主动状态，调整是得主从正常。</p>
+<p>错误解决完了继续执行(结果有省略)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">下面继续在主库的shell上检查</span><br><span class="line">[root@localhost portal]<span class="comment"># pt-table-checksum h='192.168.1.100',u='checksums',p='slavecheck',P=3306 -d radius --nocheck-replication-filters --replicate=radius.checksums</span></span><br><span class="line">            TS ERRORS  DIFFS     ROWS  CHUNKS SKIPPED    TIME TABLE</span><br><span class="line"><span class="number">06</span>-<span class="number">16</span>T16:<span class="number">50</span>:<span class="number">21</span>      <span class="number">0</span>      <span class="number">1</span>     <span class="number">8379</span>       <span class="number">4</span>       <span class="number">0</span>   <span class="number">0.322</span> radius.account_account</span><br><span class="line"><span class="number">06</span>-<span class="number">16</span>T16:<span class="number">50</span>:<span class="number">21</span>      <span class="number">0</span>      <span class="number">1</span>    <span class="number">11429</span>       <span class="number">1</span>       <span class="number">0</span>   <span class="number">0.278</span> radius.account_mac</span><br><span class="line"><span class="number">06</span>-<span class="number">16</span>T16:<span class="number">50</span>:<span class="number">21</span>      <span class="number">0</span>      <span class="number">1</span>    <span class="number">63747</span>       <span class="number">1</span>       <span class="number">0</span>   <span class="number">0.329</span> radius.account_smslog</span><br><span class="line"><span class="number">06</span>-<span class="number">16</span>T16:<span class="number">50</span>:<span class="number">21</span>      <span class="number">0</span>      <span class="number">0</span>        <span class="number">0</span>       <span class="number">1</span>       <span class="number">0</span>   <span class="number">0.016</span> radius.auth_group</span><br><span class="line"><span class="number">06</span>-<span class="number">16</span>T16:<span class="number">50</span>:<span class="number">21</span>      <span class="number">0</span>      <span class="number">0</span>        <span class="number">0</span>       <span class="number">1</span>       <span class="number">0</span>   <span class="number">0.013</span> radius.auth_group_permissions</span><br><span class="line"><span class="number">06</span>-<span class="number">16</span>T16:<span class="number">50</span>:<span class="number">22</span>      <span class="number">0</span>      <span class="number">0</span>       <span class="number">27</span>       <span class="number">1</span>       <span class="number">0</span>   <span class="number">0.265</span> radius.auth_permission</span><br><span class="line"><span class="number">06</span>-<span class="number">16</span>T16:<span class="number">50</span>:<span class="number">22</span>      <span class="number">0</span>      <span class="number">1</span>     <span class="number">8384</span>       <span class="number">1</span>       <span class="number">0</span>   <span class="number">0.273</span> radius.auth_user</span><br><span class="line">...</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>出现这种结果，说明已经check了，diffs一栏有不同，说明那些表数据不一致. 现在登录从库的mysql，执行如下语句</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from radius.checksums where master_cnt &lt;&gt; this_cnt OR master_crc &lt;&gt; this_crc OR ISNULL(master_crc) &lt;&gt; ISNULL(this_crc) \G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">            db: radius</span><br><span class="line">           tbl: account_account</span><br><span class="line">         chunk: 2</span><br><span class="line">    chunk_time: 0.028065</span><br><span class="line">   chunk_index: PRIMARY</span><br><span class="line">lower_boundary: 1847</span><br><span class="line">upper_boundary: 9225</span><br><span class="line">      this_crc: 4f43a2</span><br><span class="line">      this_cnt: 7336</span><br><span class="line">    master_crc: 9235f7a2</span><br><span class="line">    master_cnt: 7379</span><br><span class="line">            ts: 2015-06-16 17:00:31</span><br></pre></td></tr></table></figure>
+<p>一共有8条记录，这8张表数据不一致。 大概能看出来缺少了多少数据等。</p>
+<h3 id="修复不一致数据">修复不一致数据</h3><p>修复不一致数据使用<code>pt-table-sync</code> 工具，使用<code>pt-table-checksum</code>工具的结果。不过这里还是有些坑。在修复之前最好把主mysql数据备份一下，因为会对主库有些写操作，有一点风险。</p>
+<p>主库服务器执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost portal]<span class="comment"># pt-table-sync --execute --replicate radius.checksums --sync-to-master h="192.168.1.98",P=3306,u="checksums",p="slavecheck" --ignore-tables radacct,django_session</span></span><br><span class="line">DBI connect(<span class="string">';host=124.88.52.100;port=3306;mysql_read_default_group=client'</span>,<span class="string">'checksums'</span>,...) failed: Access denied <span class="keyword">for</span> user <span class="string">'checksums'</span>@<span class="string">'124.88.52.100'</span> (using password: YES) at /usr/<span class="built_in">local</span>/bin/pt-table-sync line <span class="number">2220</span></span><br><span class="line">但是直接用mysql连接就没问题</span><br></pre></td></tr></table></figure>
+<p>最后查了下文档，发现还是用户权限的问题。<br>从库操作</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; GRANT all ON radius.* TO 'checksums'@'192.168.1.100';</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br></pre></td></tr></table></figure>
+<p>主库操作</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; GRANT all ON radius.* TO 'checksums'@'192.168.1.100';</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br></pre></td></tr></table></figure>
+<p>新增<code>增删改查</code>权限其实就够了 ,我这偷懒下。。</p>
+<p>错误基本解决完了</p>
+<h4 id="修复数据">修复数据</h4><p>先修复一个不重要的表来实验下(主库操作)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pt-table-sync --execute --replicate radius.checksums --sync-to-master h=<span class="number">192.168</span>.<span class="number">1.98</span>,P=<span class="number">3306</span>,u=checksums,p=<span class="string">"slavecheck"</span>  --tables account_smslog,radcheck --print</span><br></pre></td></tr></table></figure>
+<p>修复完成在执行一次check 主库操作</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pt-table-checksum h=<span class="string">'192.168.1.100'</span>,u=<span class="string">'checksums'</span>,p=<span class="string">'slavecheck'</span>,P=<span class="number">3306</span> <span class="operator">-d</span> radius --nocheck-replication-filters --replicate=radius.checksums</span><br></pre></td></tr></table></figure>
+<p>在从库mysql中检查下</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from radius.checksums where master_cnt &lt;&gt; this_cnt OR master_crc &lt;&gt; this_crc OR ISNULL(master_crc) &lt;&gt; ISNULL(this_crc) \G</span><br></pre></td></tr></table></figure>
+<p>的确少了2张表，说明已经修复好了</p>
+<p>接着把其他表修复，然后检查下是否有问题就OK了。</p>
+<h2 id="小结">小结</h2><p>这里主要的问题就是</p>
+<ol>
+<li>脚本在那里执行（都是在主库服务器，从库只是检查下结果）</li>
+<li>怎么建立用户，用户应该给予怎样的权限</li>
+</ol>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mysql/" rel="tag">#mysql</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/03/23/write-simple-lua-c-extention/" rel="next" title="写个简单的Lua拓展-sleep函数">
+                <i class="fa fa-chevron-left"></i> 写个简单的Lua拓展-sleep函数
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/06/24/lzz-programe-travel-20151/" rel="prev" title="lzz的编程之旅2015-1">
+                lzz的编程之旅2015-1 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      </div>
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars3.githubusercontent.com/u/2696746?v=3&s=460" alt="orangleliu" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">orangleliu</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">lzz的编程之旅</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">16</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#操作过程"><span class="nav-number">2.</span> <span class="nav-text">操作过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#工具安装"><span class="nav-number">2.1.</span> <span class="nav-text">工具安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#校验数据一致性"><span class="nav-number">2.2.</span> <span class="nav-text">校验数据一致性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#建立用户并授权"><span class="nav-number">2.2.1.</span> <span class="nav-text">建立用户并授权</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pt-table-checksum_校验"><span class="nav-number">2.2.2.</span> <span class="nav-text">pt-table-checksum 校验</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修复不一致数据"><span class="nav-number">2.3.</span> <span class="nav-text">修复不一致数据</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#修复数据"><span class="nav-number">2.3.1.</span> <span class="nav-text">修复数据</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">3.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">orangleliu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'orangleliunotes';
+      var disqus_identifier = '2015/06/17/mysql-slave-data-not-same/';
+      var disqus_title = 'mysql主从数据不一致问题解决过程';
+      var disqus_url = 'http://orangleliu.info/2015/06/17/mysql-slave-data-not-same/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>
