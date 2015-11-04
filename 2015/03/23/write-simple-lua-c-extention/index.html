@@ -67,7 +67,7 @@ C 部分
 
 C 部分
 首先是根据Lua C语言的协议写好调用模块，">
-<meta property="og:updated_time" content="2015-11-04T12:06:52.000Z">
+<meta property="og:updated_time" content="2015-11-04T12:06:48.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="写个简单的Lua拓展-sleep函数">
 <meta name="twitter:description" content="这几天在做一个小项目，其中用到了一些基本的API, 例如sleep，获取当前目录等等，lua标准库中没有提供这些接口，虽然所第三方库中也都有实现，但是要用的就那么几个函数，在一个嵌入式系统中安装那么多第三方库有点浪费资源，于是@胜利哥 写了一个socket的C实现，然后给我用。我试着把其他几个函数也用C实现，首先看下怎么用C写lua的拓展。
@@ -80,7 +80,7 @@ C 部分
 <script type="text/javascript" id="hexo.configuration">
   var CONFIG = {
     scheme: 'Mist',
-    sidebar: 'post',
+    sidebar: 'always',
     motion: true
   };
 </script>
@@ -105,6 +105,10 @@ C 部分
 
 
 
+<script type="text/javascript" src="http://js.tongji.linezing.com/3605818/tongji.js"></script><noscript><a href="http://www.linezing.com"><img src="http://img.tongji.linezing.com/3605818/tongji.gif"/></a></noscript>
+
+
+
 
   <div class="container one-column page-post-detail">
     <div class="headband"></div>
@@ -120,7 +124,7 @@ C 部分
       <span class="logo-line-after"><i></i></span>
     </a>
   </div>
-  <p class="site-subtitle">爱生活，Linux，Python，和媳妇</p>
+  <p class="site-subtitle">爱媳妇，爱生活，Linux，Python</p>
 </div>
 
 <div class="site-nav-toggle">
@@ -259,11 +263,11 @@ C 部分
           
             
               <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/2015/03/23/write-simple-lua-c-extention/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/03/23/write-simple-lua-c-extention/" itemprop="commentsCount"></span>
-              </a>
-            </span>
+                &nbsp; | &nbsp;
+                <a href="/2015/03/23/write-simple-lua-c-extention/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/03/23/write-simple-lua-c-extention/" itemprop="commentsCount"></span>
+                </a>
+              </span>
             
           
 
@@ -338,6 +342,25 @@ C 部分
 
     <div class="post-spread">
       
+        <div class="ds-share flat" data-thread-key="2015/03/23/write-simple-lua-c-extention/"
+     data-title="写个简单的Lua拓展-sleep函数"
+     data-content=""
+     data-url="http://orangleliu.info/2015/03/23/write-simple-lua-c-extention/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
     </div>
   </div>
 
@@ -350,8 +373,8 @@ C 部分
         
   <div class="comments" id="comments">
     
-      <div id="disqus_thread">
-        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      <div class="ds-thread" data-thread-key="2015/03/23/write-simple-lua-c-extention/"
+           data-title="写个简单的Lua拓展-sleep函数" data-url="http://orangleliu.info/2015/03/23/write-simple-lua-c-extention/">
       </div>
     
   </div>
@@ -402,14 +425,14 @@ C 部分
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">8</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-count">14</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
@@ -427,12 +450,43 @@ C 部分
 
         <div class="links-of-author motion-element">
           
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/orangle" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/orangleliu" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> CSDN
+                  
+                </a>
+              </span>
+            
+          
         </div>
 
         
         
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
 
         <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+                <a href="http://frainmeng.github.io/" target="_blank">Yuan</a>
+              </span>
+            
           
         </div>
 
@@ -502,32 +556,37 @@ C 部分
 
   
     
+
+  
     
-
   
 
-    <script type="text/javascript">
-      var disqus_shortname = 'orangleliunotes';
-      var disqus_identifier = '2015/03/23/write-simple-lua-c-extention/';
-      var disqus_title = '写个简单的Lua拓展-sleep函数';
-      var disqus_url = 'http://orangleliu.info/2015/03/23/write-simple-lua-c-extention/';
-
-      function run_disqus_script(disqus_script){
-        var dsq = document.createElement('script');
-        dsq.type = 'text/javascript';
-        dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      }
-
-      run_disqus_script('count.js');
-      
-        run_disqus_script('embed.js');
-      
-    </script>
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"orangleliu"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+     
+  	  <script type="text/javascript">
+  		var duoshuo_user_ID = 824646
+      var duoshuo_admin_nickname="orangleliu"
+  	  </script>
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
   
 
 
+    
   
 
   

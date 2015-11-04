@@ -71,7 +71,7 @@ Count 统计个数， 可以增加dictinct">
 django中提供的聚合方法
 Avg 求平均值，数字类型的字段支持
 Count 统计个数， 可以增加dictinct">
-<meta property="og:updated_time" content="2015-11-04T12:25:54.000Z">
+<meta property="og:updated_time" content="2015-11-04T12:25:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="django-orm 聚合函数的使用">
 <meta name="twitter:description" content="orm对于普通的单表条件查询和多表的关联查询支持力度还可以，基本可以满足不是很复杂的业务场景，对于聚合函数也有一些支持，之前基本都没有用过，大部分都是使用raw sql来写的，今天把orm的聚合方法学习下，对于简单的聚合还是用orm自身来解决吧。
@@ -86,7 +86,7 @@ Count 统计个数， 可以增加dictinct">
 <script type="text/javascript" id="hexo.configuration">
   var CONFIG = {
     scheme: 'Mist',
-    sidebar: 'post',
+    sidebar: 'always',
     motion: true
   };
 </script>
@@ -111,6 +111,10 @@ Count 统计个数， 可以增加dictinct">
 
 
 
+<script type="text/javascript" src="http://js.tongji.linezing.com/3605818/tongji.js"></script><noscript><a href="http://www.linezing.com"><img src="http://img.tongji.linezing.com/3605818/tongji.gif"/></a></noscript>
+
+
+
 
   <div class="container one-column page-post-detail">
     <div class="headband"></div>
@@ -126,7 +130,7 @@ Count 统计个数， 可以增加dictinct">
       <span class="logo-line-after"><i></i></span>
     </a>
   </div>
-  <p class="site-subtitle">爱生活，Linux，Python，和媳妇</p>
+  <p class="site-subtitle">爱媳妇，爱生活，Linux，Python</p>
 </div>
 
 <div class="site-nav-toggle">
@@ -265,11 +269,11 @@ Count 统计个数， 可以增加dictinct">
           
             
               <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/2014/10/28/django-orm-aggregation-class/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/10/28/django-orm-aggregation-class/" itemprop="commentsCount"></span>
-              </a>
-            </span>
+                &nbsp; | &nbsp;
+                <a href="/2014/10/28/django-orm-aggregation-class/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2014/10/28/django-orm-aggregation-class/" itemprop="commentsCount"></span>
+                </a>
+              </span>
             
           
 
@@ -367,16 +371,16 @@ Book.objects.annotate(num_authors=Count(<span class="string">'authors'</span>)).
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2014/10/24/django-use-mutil-thread-async/" rel="next" title="django 利用多线程处理异步任务">
-                <i class="fa fa-chevron-left"></i> django 利用多线程处理异步任务
+              <a href="/2014/10/28/uwsgi-nginx-deploy-django-project/" rel="next" title="uwsgi+nginx deploy django project">
+                <i class="fa fa-chevron-left"></i> uwsgi+nginx deploy django project
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2014/10/28/uwsgi-nginx-deploy-django-project/" rel="prev" title="uwsgi+nginx deploy django project">
-                uwsgi+nginx deploy django project <i class="fa fa-chevron-right"></i>
+              <a href="/2015/03/11/nginx-konw-user-download-file-completed/" rel="prev" title="nginx统计用户下载文件情况">
+                nginx统计用户下载文件情况 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -392,6 +396,25 @@ Book.objects.annotate(num_authors=Count(<span class="string">'authors'</span>)).
 
     <div class="post-spread">
       
+        <div class="ds-share flat" data-thread-key="2014/10/28/django-orm-aggregation-class/"
+     data-title="django-orm 聚合函数的使用"
+     data-content=""
+     data-url="http://orangleliu.info/2014/10/28/django-orm-aggregation-class/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
     </div>
   </div>
 
@@ -404,8 +427,8 @@ Book.objects.annotate(num_authors=Count(<span class="string">'authors'</span>)).
         
   <div class="comments" id="comments">
     
-      <div id="disqus_thread">
-        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      <div class="ds-thread" data-thread-key="2014/10/28/django-orm-aggregation-class/"
+           data-title="django-orm 聚合函数的使用" data-url="http://orangleliu.info/2014/10/28/django-orm-aggregation-class/">
       </div>
     
   </div>
@@ -456,14 +479,14 @@ Book.objects.annotate(num_authors=Count(<span class="string">'authors'</span>)).
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">8</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-count">14</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
@@ -481,12 +504,43 @@ Book.objects.annotate(num_authors=Count(<span class="string">'authors'</span>)).
 
         <div class="links-of-author motion-element">
           
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/orangle" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/orangleliu" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> CSDN
+                  
+                </a>
+              </span>
+            
+          
         </div>
 
         
         
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
 
         <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+                <a href="http://frainmeng.github.io/" target="_blank">Yuan</a>
+              </span>
+            
           
         </div>
 
@@ -556,32 +610,37 @@ Book.objects.annotate(num_authors=Count(<span class="string">'authors'</span>)).
 
   
     
+
+  
     
-
   
 
-    <script type="text/javascript">
-      var disqus_shortname = 'orangleliunotes';
-      var disqus_identifier = '2014/10/28/django-orm-aggregation-class/';
-      var disqus_title = 'django-orm 聚合函数的使用';
-      var disqus_url = 'http://orangleliu.info/2014/10/28/django-orm-aggregation-class/';
-
-      function run_disqus_script(disqus_script){
-        var dsq = document.createElement('script');
-        dsq.type = 'text/javascript';
-        dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      }
-
-      run_disqus_script('count.js');
-      
-        run_disqus_script('embed.js');
-      
-    </script>
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"orangleliu"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+     
+  	  <script type="text/javascript">
+  		var duoshuo_user_ID = 824646
+      var duoshuo_admin_nickname="orangleliu"
+  	  </script>
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
   
 
 
+    
   
 
   

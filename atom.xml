@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title><![CDATA[Orangleliu Notes]]></title>
-  <subtitle><![CDATA[爱生活，Linux，Python，和媳妇]]></subtitle>
+  <subtitle><![CDATA[爱媳妇，爱生活，Linux，Python]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://orangleliu.info/"/>
   <updated>2015-11-04T12:25:11.000Z</updated>
@@ -123,7 +123,7 @@ contracts = Contracts<span class="class">.objects</span><span class="class">.fil
     <link href="http://orangleliu.info/2015/10/14/lzz-programe-travel-20153/"/>
     <id>http://orangleliu.info/2015/10/14/lzz-programe-travel-20153/</id>
     <published>2015-10-14T10:17:48.000Z</published>
-    <updated>2015-11-04T12:01:11.000Z</updated>
+    <updated>2015-11-04T12:01:09.000Z</updated>
     <content type="html"><![CDATA[<h2 id="Pycon">Pycon</h2><p>今年的PyCon算是赶上了, 9月19日是个晴朗的周六，北京的python爱好者们在77剧场相聚，愉快的完成了15年的大聚会。总得来说今年要比去年进步很多的（虽然去年我没参加^^）, 下面是一个大合影。</p>
 <p><img src="/img/pycon2015.jpg" alt="pycon2015"></p>
 <h2 id="最近csdn的经历">最近csdn的经历</h2><p>CSDN最近开始主推一个叫做<code>极客头条</code>的板块，在他们的专家群里响应号召，加入了核心分享小分队。如果你经常看<code>Hacknews</code>应该对这种风格的事物不陌生，如果你关注过<code>开发者，伯乐，稀土。。头条</code>，应该非常熟悉这种模式了。就是个大家分享好文章的地方，只发链接，通过大家的推荐自动聚合一些技术干货文章，业界新闻。</p>
@@ -147,7 +147,7 @@ contracts = Contracts<span class="class">.objects</span><span class="class">.fil
     <link href="http://orangleliu.info/2015/09/01/lzz-programe-travel-20152/"/>
     <id>http://orangleliu.info/2015/09/01/lzz-programe-travel-20152/</id>
     <published>2015-09-01T10:17:48.000Z</published>
-    <updated>2015-11-04T11:59:53.000Z</updated>
+    <updated>2015-11-04T11:59:51.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>不知不觉已经到郭哥的公司一年了，和大家相处的很好，感觉非常温暖（好像呆过的其他公司一样，不管工作辛苦不辛苦，大家相处的非常融洽，即使不在一起工作也会经常联系，也许这就是程序员们的简单吧）。 也有点小抱怨，工资没有涨，平时也不发点小福利，好像把这些都忘了呀。。</p>
 </blockquote>
@@ -176,7 +176,7 @@ contracts = Contracts<span class="class">.objects</span><span class="class">.fil
     <link href="http://orangleliu.info/2015/06/24/lzz-programe-travel-20151/"/>
     <id>http://orangleliu.info/2015/06/24/lzz-programe-travel-20151/</id>
     <published>2015-06-24T10:17:48.000Z</published>
-    <updated>2015-11-04T11:57:50.000Z</updated>
+    <updated>2015-11-04T11:57:39.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>想来时间过得也快，2012年7月2日第一天上班到现在也快3年了，从大学的时候不知道做什么到后来干软件，到现在也算是 <code>干一行爱一行</code> 吧，至少现在是挺热爱的。记得上学的时候总觉得自己也能写几个文字，弄弄笔墨，到这两年发现写个句子都有点不连贯了。那么以后还是要耍耍键盘，写写自己的生活体会，也好给未来的自己瞅一瞅。</p>
 </blockquote>
@@ -204,7 +204,7 @@ contracts = Contracts<span class="class">.objects</span><span class="class">.fil
     <link href="http://orangleliu.info/2015/06/17/mysql-slave-data-not-same/"/>
     <id>http://orangleliu.info/2015/06/17/mysql-slave-data-not-same/</id>
     <published>2015-06-17T09:49:30.000Z</published>
-    <updated>2015-11-04T12:03:31.000Z</updated>
+    <updated>2015-11-04T12:03:27.000Z</updated>
     <content type="html"><![CDATA[ <a id="more"></a>
 <blockquote>
 <p>情况时这样的<br>昨天晚上主动2个机器都迁移了，然后今天才把主动重新连接上，但是从库的偏移量是从今天当前时刻开始的，也就是说虽然现在主动看似正常，其实是少了昨天的部分数据，由于从库的数据丢失了，早晚还是要填坑的。</p>
@@ -293,7 +293,7 @@ contracts = Contracts<span class="class">.objects</span><span class="class">.fil
     <link href="http://orangleliu.info/2015/03/23/write-simple-lua-c-extention/"/>
     <id>http://orangleliu.info/2015/03/23/write-simple-lua-c-extention/</id>
     <published>2015-03-23T12:17:48.000Z</published>
-    <updated>2015-11-04T12:06:52.000Z</updated>
+    <updated>2015-11-04T12:06:48.000Z</updated>
     <content type="html"><![CDATA[ <a id="more"></a>
 <blockquote>
 <p>这几天在做一个小项目，其中用到了一些基本的API, 例如sleep，获取当前目录等等，lua标准库中没有提供这些接口，虽然所第三方库中也都有实现，但是要用的就那么几个函数，在一个嵌入式系统中安装那么多第三方库有点浪费资源，于是<strong>@胜利哥</strong> 写了一个socket的C实现，然后给我用。我试着把其他几个函数也用C实现，首先看下怎么用C写lua的拓展。</p>
@@ -379,6 +379,89 @@ contracts = Contracts<span class="class">.objects</span><span class="class">.fil
       <category term="nginx" scheme="http://orangleliu.info/tags/nginx/"/>
     
       <category term="后端开发" scheme="http://orangleliu.info/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[django-orm 聚合函数的使用]]></title>
+    <link href="http://orangleliu.info/2014/10/28/django-orm-aggregation-class/"/>
+    <id>http://orangleliu.info/2014/10/28/django-orm-aggregation-class/</id>
+    <published>2014-10-28T08:58:48.000Z</published>
+    <updated>2015-11-04T12:25:47.000Z</updated>
+    <content type="html"><![CDATA[ <a id="more"></a>
+<blockquote>
+<p>orm对于普通的单表条件查询和多表的关联查询支持力度还可以，基本可以满足不是很复杂的业务场景，对于聚合函数也有一些支持，之前基本都没有用过，大部分都是使用raw sql来写的，今天把orm的聚合方法学习下，对于简单的聚合还是用orm自身来解决吧。</p>
+</blockquote>
+<p>一下笔记是基于django1.6</p>
+<h2 id="django中提供的聚合方法"><a href="https://docs.djangoproject.com/en/1.6/ref/models/querysets/#aggregation-functions" target="_blank" rel="external">django中提供的聚合方法</a></h2><ul>
+<li>Avg 求平均值，数字类型的字段支持</li>
+<li>Count 统计个数， 可以增加dictinct选项 一般和annotate一起使用</li>
+<li>Max 最大值</li>
+<li>Mix  最小值</li>
+<li>StdDev 计算给出字段的标准差</li>
+<li>Sum 计算字段的和</li>
+<li>Variance 计算字段的方差</li>
+</ul>
+<h2 id="聚合方法的使用"><a href="https://docs.djangoproject.com/en/1.6/topics/db/aggregation/" target="_blank" rel="external">聚合方法的使用</a></h2><p><a href="https://docs.djangoproject.com/en/1.6/topics/db/aggregation/" target="_blank" rel="external">文档地址</a></p>
+<p>模型参见文档,这些查询都是可以和filter，order_by等一起使用的</p>
+<blockquote>
+<p> from django.db import models<br>    class Author(models.Model):<br>        name = models.CharField(max_length=100)<br>        age = models.IntegerField()</p>
+</blockquote>
+<pre><code>class <span class="function"><span class="title">Publisher</span><span class="params">(models.Model)</span></span>:
+    name = models.<span class="function"><span class="title">CharField</span><span class="params">(max_length=<span class="number">300</span>)</span></span>
+    num_awards = models.<span class="function"><span class="title">IntegerField</span><span class="params">()</span></span>
+
+class <span class="function"><span class="title">Book</span><span class="params">(models.Model)</span></span>:
+    name = models.<span class="function"><span class="title">CharField</span><span class="params">(max_length=<span class="number">300</span>)</span></span>
+    pages = models.<span class="function"><span class="title">IntegerField</span><span class="params">()</span></span>
+    price = models.<span class="function"><span class="title">DecimalField</span><span class="params">(max_digits=<span class="number">10</span>, decimal_places=<span class="number">2</span>)</span></span>
+    rating = models.<span class="function"><span class="title">FloatField</span><span class="params">()</span></span>
+    authors = models.<span class="function"><span class="title">ManyToManyField</span><span class="params">(Author)</span></span>
+    publisher = models.<span class="function"><span class="title">ForeignKey</span><span class="params">(Publisher)</span></span>
+    pubdate = models.<span class="function"><span class="title">DateField</span><span class="params">()</span></span>
+
+class <span class="function"><span class="title">Store</span><span class="params">(models.Model)</span></span>:
+    name = models.<span class="function"><span class="title">CharField</span><span class="params">(max_length=<span class="number">300</span>)</span></span>
+    books = models.<span class="function"><span class="title">ManyToManyField</span><span class="params">(Book)</span></span>
+    registered_users = models.<span class="function"><span class="title">PositiveIntegerField</span><span class="params">()</span></span>
+</code></pre><p>查询例子</p>
+<pre><code><span class="comment">#得到所有书的总量</span>
+Book.objects.count()
+<span class="comment">#求平均值，最大值，最小值用法基本相似</span>
+<span class="keyword">from</span> django.db.models <span class="keyword">import</span> Avg
+Book.objects.all().aggregate(Avg(<span class="string">'price'</span>))
+{<span class="string">'price__avg'</span>: <span class="number">34.35</span>}  <span class="comment">#返回值是一个字典类型，key的名字好像不是很友好</span>
+
+<span class="comment">#计算每个出版社，出版书的数目</span>
+<span class="keyword">from</span> django.db.models <span class="keyword">import</span> Count
+pubs = Publisher.objects.annotate(num_books=Count(<span class="string">'book'</span>))
+<span class="comment">#计算所有出版社出版书数目最多的5个出版社</span>
+pubs = Publisher.objects.annotate(num_books=Count(<span class="string">'book'</span>)).order_by(<span class="string">'-num_books'</span>)[:<span class="number">5</span>]
+pubs[<span class="number">0</span>].num_books
+<span class="number">1323</span>
+
+<span class="comment">#返回值别名</span>
+Book.objects.aggregate(average_price=Avg(<span class="string">'price'</span>))  <span class="comment">#添加了一个average_price来作为返回值的key</span>
+{<span class="string">'average_price'</span>: <span class="number">34.35</span>}
+
+<span class="comment">#连表查询  跟filter中很相似使用 __来关联到其他表</span>
+Store.objects.aggregate(min_price=Min(<span class="string">'books__price'</span>), max_price=Max(<span class="string">'books__price'</span>))
+
+<span class="comment">#也可以把聚合和计数同时使用</span>
+<span class="comment">#计算每个作者平均出版书的数目</span>
+<span class="keyword">from</span> django.db.models <span class="keyword">import</span> Count, Avg
+Book.objects.annotate(num_authors=Count(<span class="string">'authors'</span>)).aggregate(Avg(<span class="string">'num_authors'</span>))
+</code></pre><p>以上只是对文档的理解，具体使用还需要具体看业务需求。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[ <a id="more"></a>
+<blockquote>
+<p>orm对于普通的单表条件查询和多表的关联查询支持力度还可以，基本可以满足不是很复杂的业务场景，对于聚合函数也有一些支持，之前基本都没有用过，大部分都是使用raw sql来写的，今天把orm的聚合方法学习下，对于]]>
+    </summary>
+    
+      <category term="orm" scheme="http://orangleliu.info/tags/orm/"/>
+    
+      <category term="django" scheme="http://orangleliu.info/categories/django/"/>
     
   </entry>
   
@@ -469,94 +552,11 @@ contracts = Contracts<span class="class">.objects</span><span class="class">.fil
   </entry>
   
   <entry>
-    <title><![CDATA[django-orm 聚合函数的使用]]></title>
-    <link href="http://orangleliu.info/2014/10/28/django-orm-aggregation-class/"/>
-    <id>http://orangleliu.info/2014/10/28/django-orm-aggregation-class/</id>
-    <published>2014-10-28T08:58:48.000Z</published>
-    <updated>2015-11-04T12:25:54.000Z</updated>
-    <content type="html"><![CDATA[ <a id="more"></a>
-<blockquote>
-<p>orm对于普通的单表条件查询和多表的关联查询支持力度还可以，基本可以满足不是很复杂的业务场景，对于聚合函数也有一些支持，之前基本都没有用过，大部分都是使用raw sql来写的，今天把orm的聚合方法学习下，对于简单的聚合还是用orm自身来解决吧。</p>
-</blockquote>
-<p>一下笔记是基于django1.6</p>
-<h2 id="django中提供的聚合方法"><a href="https://docs.djangoproject.com/en/1.6/ref/models/querysets/#aggregation-functions" target="_blank" rel="external">django中提供的聚合方法</a></h2><ul>
-<li>Avg 求平均值，数字类型的字段支持</li>
-<li>Count 统计个数， 可以增加dictinct选项 一般和annotate一起使用</li>
-<li>Max 最大值</li>
-<li>Mix  最小值</li>
-<li>StdDev 计算给出字段的标准差</li>
-<li>Sum 计算字段的和</li>
-<li>Variance 计算字段的方差</li>
-</ul>
-<h2 id="聚合方法的使用"><a href="https://docs.djangoproject.com/en/1.6/topics/db/aggregation/" target="_blank" rel="external">聚合方法的使用</a></h2><p><a href="https://docs.djangoproject.com/en/1.6/topics/db/aggregation/" target="_blank" rel="external">文档地址</a></p>
-<p>模型参见文档,这些查询都是可以和filter，order_by等一起使用的</p>
-<blockquote>
-<p> from django.db import models<br>    class Author(models.Model):<br>        name = models.CharField(max_length=100)<br>        age = models.IntegerField()</p>
-</blockquote>
-<pre><code>class <span class="function"><span class="title">Publisher</span><span class="params">(models.Model)</span></span>:
-    name = models.<span class="function"><span class="title">CharField</span><span class="params">(max_length=<span class="number">300</span>)</span></span>
-    num_awards = models.<span class="function"><span class="title">IntegerField</span><span class="params">()</span></span>
-
-class <span class="function"><span class="title">Book</span><span class="params">(models.Model)</span></span>:
-    name = models.<span class="function"><span class="title">CharField</span><span class="params">(max_length=<span class="number">300</span>)</span></span>
-    pages = models.<span class="function"><span class="title">IntegerField</span><span class="params">()</span></span>
-    price = models.<span class="function"><span class="title">DecimalField</span><span class="params">(max_digits=<span class="number">10</span>, decimal_places=<span class="number">2</span>)</span></span>
-    rating = models.<span class="function"><span class="title">FloatField</span><span class="params">()</span></span>
-    authors = models.<span class="function"><span class="title">ManyToManyField</span><span class="params">(Author)</span></span>
-    publisher = models.<span class="function"><span class="title">ForeignKey</span><span class="params">(Publisher)</span></span>
-    pubdate = models.<span class="function"><span class="title">DateField</span><span class="params">()</span></span>
-
-class <span class="function"><span class="title">Store</span><span class="params">(models.Model)</span></span>:
-    name = models.<span class="function"><span class="title">CharField</span><span class="params">(max_length=<span class="number">300</span>)</span></span>
-    books = models.<span class="function"><span class="title">ManyToManyField</span><span class="params">(Book)</span></span>
-    registered_users = models.<span class="function"><span class="title">PositiveIntegerField</span><span class="params">()</span></span>
-</code></pre><p>查询例子</p>
-<pre><code><span class="comment">#得到所有书的总量</span>
-Book.objects.count()
-<span class="comment">#求平均值，最大值，最小值用法基本相似</span>
-<span class="keyword">from</span> django.db.models <span class="keyword">import</span> Avg
-Book.objects.all().aggregate(Avg(<span class="string">'price'</span>))
-{<span class="string">'price__avg'</span>: <span class="number">34.35</span>}  <span class="comment">#返回值是一个字典类型，key的名字好像不是很友好</span>
-
-<span class="comment">#计算每个出版社，出版书的数目</span>
-<span class="keyword">from</span> django.db.models <span class="keyword">import</span> Count
-pubs = Publisher.objects.annotate(num_books=Count(<span class="string">'book'</span>))
-<span class="comment">#计算所有出版社出版书数目最多的5个出版社</span>
-pubs = Publisher.objects.annotate(num_books=Count(<span class="string">'book'</span>)).order_by(<span class="string">'-num_books'</span>)[:<span class="number">5</span>]
-pubs[<span class="number">0</span>].num_books
-<span class="number">1323</span>
-
-<span class="comment">#返回值别名</span>
-Book.objects.aggregate(average_price=Avg(<span class="string">'price'</span>))  <span class="comment">#添加了一个average_price来作为返回值的key</span>
-{<span class="string">'average_price'</span>: <span class="number">34.35</span>}
-
-<span class="comment">#连表查询  跟filter中很相似使用 __来关联到其他表</span>
-Store.objects.aggregate(min_price=Min(<span class="string">'books__price'</span>), max_price=Max(<span class="string">'books__price'</span>))
-
-<span class="comment">#也可以把聚合和计数同时使用</span>
-<span class="comment">#计算每个作者平均出版书的数目</span>
-<span class="keyword">from</span> django.db.models <span class="keyword">import</span> Count, Avg
-Book.objects.annotate(num_authors=Count(<span class="string">'authors'</span>)).aggregate(Avg(<span class="string">'num_authors'</span>))
-</code></pre><p>以上只是对文档的理解，具体使用还需要具体看业务需求。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[ <a id="more"></a>
-<blockquote>
-<p>orm对于普通的单表条件查询和多表的关联查询支持力度还可以，基本可以满足不是很复杂的业务场景，对于聚合函数也有一些支持，之前基本都没有用过，大部分都是使用raw sql来写的，今天把orm的聚合方法学习下，对于]]>
-    </summary>
-    
-      <category term="orm" scheme="http://orangleliu.info/tags/orm/"/>
-    
-      <category term="django" scheme="http://orangleliu.info/categories/django/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[django 利用多线程处理异步任务]]></title>
     <link href="http://orangleliu.info/2014/10/24/django-use-mutil-thread-async/"/>
     <id>http://orangleliu.info/2014/10/24/django-use-mutil-thread-async/</id>
     <published>2014-10-24T08:58:48.000Z</published>
-    <updated>2015-11-04T12:21:02.000Z</updated>
+    <updated>2015-11-04T12:20:59.000Z</updated>
     <content type="html"><![CDATA[ <a id="more"></a>
 <blockquote>
 <p>看到django异步大家的反应应该是celery这种消息队列组件，现在用的最多的最推荐的也是这种方式。然而我这需求就是<br>请求来了，执行一个小程序，但是又不能确定这个小程序啥时候执行完，响应又要及时，丢给队列处理当然可以，但是<br>为了简单，决定直接起个线程跑跑。 （当然这只是实验，应用规模也很小，如果并发高，会有很多问题）</p>
@@ -611,7 +611,7 @@ end.... Thread-<span class="number">7</span>
     <link href="http://orangleliu.info/2014/10/22/django-debug-tools-use/"/>
     <id>http://orangleliu.info/2014/10/22/django-debug-tools-use/</id>
     <published>2014-10-22T04:58:48.000Z</published>
-    <updated>2015-11-04T12:27:25.000Z</updated>
+    <updated>2015-11-04T12:26:47.000Z</updated>
     <content type="html"><![CDATA[ <a id="more"></a>
 <blockquote>
 <p>用django开发很快也很容易，但是很多时候我们的经验并不是很足，就会给自己挖下很多坑，不管是性能问题，还是开发语言使用技巧问题都会给应用的稳定带来危害， 开发之后的调试和调优就显得很重要，今天就尝试使用django-debug-toolbar来给我们的开发增加更多的调试和监控。之前只是听说过，没有具体应用过。</p>
@@ -670,7 +670,7 @@ end.... Thread-<span class="number">7</span>
     <link href="http://orangleliu.info/2014/08/15/Django-orm-get-filter-differ/"/>
     <id>http://orangleliu.info/2014/08/15/Django-orm-get-filter-differ/</id>
     <published>2014-08-15T15:59:48.000Z</published>
-    <updated>2015-11-04T12:24:56.000Z</updated>
+    <updated>2015-11-04T12:24:40.000Z</updated>
     <content type="html"><![CDATA[ <a id="more"></a>
 <blockquote>
 <p>Django的orm框架对于业务复杂度不是很高的应用来说还是不错的，写起来很方面，用起来也简单。对于新手来说查询操作中最长用的两个方法get和filter有时候一不注意就会犯下一些小错误。那么今天就来小节下这两个方法使用上的不同。</p>
@@ -715,7 +715,7 @@ end.... Thread-<span class="number">7</span>
     <link href="http://orangleliu.info/2014/08/09/user-docker-in-python-and-ipython/"/>
     <id>http://orangleliu.info/2014/08/09/user-docker-in-python-and-ipython/</id>
     <published>2014-08-09T12:17:48.000Z</published>
-    <updated>2015-11-04T12:16:37.000Z</updated>
+    <updated>2015-11-04T12:16:19.000Z</updated>
     <content type="html"><![CDATA[ <a id="more"></a>
 <p>现在Docker是地球上最炙手可热的项目之一，就意味着人民实际上不仅仅是因为这个才喜欢它。<br>话虽如此，我非常喜欢使用容器，服务发现以及所有被创造出的新趣的点子和领域来切换工作作为范例。<br>这个文章中我会简要介绍使用python中的docker-py模块来操作Docker 容器，这里会使用我喜爱的编程工具IPython。</p>
 <p>##安装docker-py<br>首先需要docker-py。注意这里的案例中我将会使用Ubuntu Trusty 14.04版本。</p>
@@ -896,7 +896,7 @@ dict(**kwargs) -&gt; new dictionary initialized with the name=value pairs
     <link href="http://orangleliu.info/2014/08/09/celery-best-practice/"/>
     <id>http://orangleliu.info/2014/08/09/celery-best-practice/</id>
     <published>2014-08-09T12:17:48.000Z</published>
-    <updated>2015-11-04T12:01:44.000Z</updated>
+    <updated>2015-11-04T12:01:42.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p><a href="http://blog.csdn.net/orangleliu" target="_blank" rel="external">orangleliu</a> 翻译  <a href="https://denibertovic.com/posts/celery-best-practices/" target="_blank" rel="external">原文点击查看</a></p>
 </blockquote>
