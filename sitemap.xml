@@ -2,18 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://orangleliu.info/2015/11/04/hexo-blog-notes/</loc>
+    <lastmod>2015-11-05T00:53:18.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://orangleliu.info/about/index.html</loc>
     <lastmod>2015-11-04T14:28:07.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://orangleliu.info/2014/10/22/django-debug-tools-use/</loc>
-    <lastmod>2015-11-04T12:26:47.000Z</lastmod>
+    <lastmod>2015-11-04T12:27:25.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://orangleliu.info/2014/10/28/django-orm-aggregation-class/</loc>
-    <lastmod>2015-11-04T12:25:47.000Z</lastmod>
+    <lastmod>2015-11-04T12:25:54.000Z</lastmod>
   </url>
   
   <url>
@@ -23,7 +28,7 @@
   
   <url>
     <loc>http://orangleliu.info/2014/08/15/Django-orm-get-filter-differ/</loc>
-    <lastmod>2015-11-04T12:24:40.000Z</lastmod>
+    <lastmod>2015-11-04T12:24:56.000Z</lastmod>
   </url>
   
   <url>
@@ -33,12 +38,12 @@
   
   <url>
     <loc>http://orangleliu.info/2014/10/24/django-use-mutil-thread-async/</loc>
-    <lastmod>2015-11-04T12:20:59.000Z</lastmod>
+    <lastmod>2015-11-04T12:21:02.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://orangleliu.info/2014/08/09/user-docker-in-python-and-ipython/</loc>
-    <lastmod>2015-11-04T12:16:19.000Z</lastmod>
+    <lastmod>2015-11-04T12:16:37.000Z</lastmod>
   </url>
   
   <url>
@@ -53,37 +58,32 @@
   
   <url>
     <loc>http://orangleliu.info/2015/03/23/write-simple-lua-c-extention/</loc>
-    <lastmod>2015-11-04T12:06:48.000Z</lastmod>
+    <lastmod>2015-11-04T12:06:52.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://orangleliu.info/2015/06/17/mysql-slave-data-not-same/</loc>
-    <lastmod>2015-11-04T12:03:27.000Z</lastmod>
+    <lastmod>2015-11-04T12:03:31.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://orangleliu.info/2014/08/09/celery-best-practice/</loc>
-    <lastmod>2015-11-04T12:01:42.000Z</lastmod>
+    <lastmod>2015-11-04T12:01:44.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://orangleliu.info/2015/10/14/lzz-programe-travel-20153/</loc>
-    <lastmod>2015-11-04T12:01:09.000Z</lastmod>
+    <lastmod>2015-11-04T12:01:11.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://orangleliu.info/2015/09/01/lzz-programe-travel-20152/</loc>
-    <lastmod>2015-11-04T11:59:51.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://orangleliu.info/2015/11/04/hexo-blog-notes/</loc>
-    <lastmod>2015-11-04T11:58:05.000Z</lastmod>
+    <lastmod>2015-11-04T11:59:53.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://orangleliu.info/2015/06/24/lzz-programe-travel-20151/</loc>
-    <lastmod>2015-11-04T11:57:39.000Z</lastmod>
+    <lastmod>2015-11-04T11:57:50.000Z</lastmod>
   </url>
   
   <url>

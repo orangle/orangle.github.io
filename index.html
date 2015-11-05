@@ -205,15 +205,6 @@
 
     
     
-      
-      
-        
-        
-        
-      
-
-      
-    
 
     
       
@@ -521,16 +512,10 @@ class MyModel(models.Model):
           <span itemprop="articleBody">
             
             
-Github Pages用了大概一年多，之前的都是基于jekll的，但是比较烂，加上弄得主题不好看，也就没怎么写文章了，这两日看到以前的伙伴弄了个hexo主题的静态博客，于是也来尝尝鲜，学习学习。
+Github Pages用了大概一年多，之前的都是基于jekll的，但是比较懒，加上弄得主题不好看，也就没怎么写文章了，这两日看到以前的伙伴弄了个hexo主题的静态博客，于是也来尝尝鲜，学习学习，花了几个小时搭建好了。
 
-TODO
-评论测试
-统计测试
-增加一个第三方统计
-文章迁移
-
-
-            
+总得来说还是很容易的，当然如果需要一些自己想要的功能还是要看看源码，修改修改
+            ...
           </span>
           <div class="post-more-link text-center">
             <a class="btn" href="/2015/11/04/hexo-blog-notes/#more" rel="contents">
@@ -1241,8 +1226,8 @@ TODO
             
               
                 
-                <a class="post-title-link" href="/2014/10/28/django-orm-aggregation-class/" itemprop="url">
-                  django-orm 聚合函数的使用
+                <a class="post-title-link" href="/2014/10/28/uwsgi-nginx-deploy-django-project/" itemprop="url">
+                  uwsgi+nginx deploy django project
                 </a>
               
             
@@ -1262,8 +1247,8 @@ TODO
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/django/" itemprop="url" rel="index">
-                    <span itemprop="name">django</span>
+                  <a href="/categories/后端开发/" itemprop="url" rel="index">
+                    <span itemprop="name">后端开发</span>
                   </a>
                 </span>
 
@@ -1278,8 +1263,8 @@ TODO
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2014/10/28/django-orm-aggregation-class/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2014/10/28/django-orm-aggregation-class/" itemprop="commentsCount"></span>
+                <a href="/2014/10/28/uwsgi-nginx-deploy-django-project/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2014/10/28/uwsgi-nginx-deploy-django-project/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -1302,15 +1287,18 @@ TODO
           <span itemprop="articleBody">
             
              
+version
+django version:1.6
+os version: Centos 6.2
+nginx version: 1.4.2
+uwsgi version: 2.0.8
+python version: 2.7.5
 
-orm对于普通的单表条件查询和多表的关联查询支持力度还可以，基本可以满足不是很复杂的业务场景，对于聚合函数也有一些支持，之前基本都没有用过，大部分都是使用raw sql来写的，今天把orm的聚合方法学习下，对于简单的聚合还是用orm自身来解决吧。
-
-一下笔记是基于django1.6
-djang
+directory1 django project is in /
             ...
           </span>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2014/10/28/django-orm-aggregation-class/#more" rel="contents">
+            <a class="btn" href="/2014/10/28/uwsgi-nginx-deploy-django-project/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1385,14 +1373,14 @@ djang
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-count">7</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-count">12</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
