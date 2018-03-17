@@ -1,0 +1,821 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-5122147502034582",
+    enable_page_level_ads: true
+    });
+    </script>
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="优化,架构," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Orangleliu Notes" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="转载：黑夜路人群技术讨论总结，由黑夜路人(公共号heiyeluren-tech)整理，原文链接  今日话题 讨论网站(如电商,游戏等,以具体业务为例)从小流量到大流量架构演变的技术以及注意点 - 耿安鹏   问: 昨天reddit提到把未登录的用户作为二等公民,直接输出缓存,这是在哪一层做的呢? - twin  回: http层？ - linbo 回: 看报道说是丢给cdn了 - liuzhi">
+<meta name="keywords" content="优化,架构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从小流量到大流量架构演变的技术以及注意点">
+<meta property="og:url" content="http://orangleliu.info/2015/03/14/blackroad-web-site-flow-grow/index.html">
+<meta property="og:site_name" content="Orangleliu Notes">
+<meta property="og:description" content="转载：黑夜路人群技术讨论总结，由黑夜路人(公共号heiyeluren-tech)整理，原文链接  今日话题 讨论网站(如电商,游戏等,以具体业务为例)从小流量到大流量架构演变的技术以及注意点 - 耿安鹏   问: 昨天reddit提到把未登录的用户作为二等公民,直接输出缓存,这是在哪一层做的呢? - twin  回: http层？ - linbo 回: 看报道说是丢给cdn了 - liuzhi">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2015-11-08T14:16:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从小流量到大流量架构演变的技术以及注意点">
+<meta name="twitter:description" content="转载：黑夜路人群技术讨论总结，由黑夜路人(公共号heiyeluren-tech)整理，原文链接  今日话题 讨论网站(如电商,游戏等,以具体业务为例)从小流量到大流量架构演变的技术以及注意点 - 耿安鹏   问: 昨天reddit提到把未登录的用户作为二等公民,直接输出缓存,这是在哪一层做的呢? - twin  回: http层？ - linbo 回: 看报道说是丢给cdn了 - liuzhi">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always',
+    motion: true
+  };
+</script>
+
+  <title> 从小流量到大流量架构演变的技术以及注意点 | Orangleliu Notes </title>
+  <meta name="baidu-site-verification" content="lSLVvLYpze" />
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-84711421-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?c76426a5d9e6794ac5edc882f0445ebd";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+  <script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+    </script>
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Orangleliu Notes</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">爱媳妇，爱生活，Linux，Python</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                从小流量到大流量架构演变的技术以及注意点
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2015-03-14T20:17:48+08:00" content="2015-03-14">
+              2015-03-14
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/分享/" itemprop="url" rel="index">
+                    <span itemprop="name">分享</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><a id="more"></a>
+<blockquote>
+<p>转载：黑夜路人群技术讨论总结，由黑夜路人(公共号heiyeluren-tech)整理，<a href="http://mp.weixin.qq.com/s?__biz=MzA3MDA2MjE2OQ==&amp;mid=205575944&amp;idx=1&amp;sn=e19cb9f0dfd8509bb93f3451f38c23fc&amp;scene=1&amp;from=groupmessage&amp;isappinstalled=0#rd" target="_blank" rel="noopener">原文链接</a></p>
+</blockquote>
+<h2 id="今日话题"><a href="#今日话题" class="headerlink" title="今日话题"></a>今日话题</h2><blockquote>
+<p>讨论网站(如电商,游戏等,以具体业务为例)从小流量到大流量架构演变的技术以及注意点 - 耿安鹏</p>
+</blockquote>
+<ol>
+<li><p>问: 昨天reddit提到把未登录的用户作为二等公民,直接输出缓存,这是在哪一层做的呢? - twin</p>
+<ul>
+<li>回: http层？ - linbo</li>
+<li>回: 看报道说是丢给cdn了 - liuzhizhi</li>
+</ul>
+</li>
+<li><p>问: 数据库中 读出来的 数据300w条，想做一个foreach处理。一次处理不了。有什么办法呢。 - 阿杜</p>
+<ul>
+<li>回: find_each(limit + offset) 类似rails的find_each - 张建</li>
+<li>回: 分批处理呗 - 徐刚</li>
+<li>回: 放到redis的set里 - 张建</li>
+<li>回: 用 scan迭代 - shawnvan</li>
+</ul>
+</li>
+<li><p>小流量的站点提前做好动静分离，以便于流量增长后可以对静态代码部署CDN，对动态代码做负载。 - 守墓人-铭</p>
+</li>
+<li><p>问: 请教个问题！如果做高并发测试的话！nginx   mysql  php  调整哪些参数有效. 这三个调整哪些参数对并发有影响！就是在配置文件中的参数 - 马振国</p>
+<ul>
+<li>回: 先调内核参数 - 徐刚</li>
+<li>回: 小的话随便调，大了线程数规划就要跟内存大小挂钩。php nginx 都是如此 - 守墓人-铭</li>
+<li>回: 看文档呗. 理解操作系统基本概念，tcp/ip，http协议，自然就知道什么意思了 - linbo</li>
+<li>回: 就看conf文件里的说明,或者官方的文档. 有时间就一个个试试, 能看源码那更好了. 没有一蹴而就,都是一点点积累. - twin</li>
+<li>回: 没这么复杂. 对于php来说，关键配置就几个. 比如什么 php-fpm的  max_requests. 还有 max_childs,这两个最关键. 然后是超时相关的. 一般都用静态，动态太麻烦. 一会启动进程，一会关闭进程的，不够cpu累的.动态一般是你服务器配置不咋滴，或者多个服务一块部署，资源紧张情况下。这年头，只要是个正经公司，不会没事一堆服务部署一台机器基本差不多，超时的几个参数关心下nginx 大概也是几个参数，包括cpu亲合性，针对每个核心设置不同的key。建议剩一个cpu. 剩一个核心的cpu比如你8核cpu，那你nginx就用7个核，保证操作系统别压力太大。nginx还有几个是tcp相关的配置，什么no delay之类的。还有是关于缓存等相关的。另外，建议开启sendfile后端跟php_fpm交互的化，还有fastcgi相关的配置哈哈，主要超时什么的其他基本没有，但是如果用了fastcgi_cache，或者用了proxy，或者proxy_cache，配置稍微不同，不过一般用不到。有一个unix socket域设置fpm里设置一个，设置一个socket文件保存位置。一般直接tcp交互，别用本地socket. 在nginx里 - 黑夜路人</li>
+<li>回: fpm nginx 同机，就用socket直接通信 - hilojack</li>
+<li>回: socket传输快，但在高并发下不太稳定吧. 我也不知道  这个开发给我的结果 - 马振国</li>
+<li>回: 不稳定是胡说 - 黑夜路人</li>
+<li>回: 直接用tcp就好了吧，socket只能在本机通信，将来扩展了，nginx和php一般不在一个机器上 - 风之缘</li>
+</ul>
+</li>
+<li><p>行业:游戏</p>
+<ul>
+<li>原来公司将数据库分布式了，如果需要可以远程多调用几个数据库服务器</li>
+<li>听说墨麟是将数据库全用分布式redis实现，不用MySQL，这个伸缩性就更大。</li>
+<li>用netty，io线程占比，内存池，缓存队列都可以调解</li>
+<li>讲个别服务逻辑做成了独立的，例如聊天，场景，战斗都按功能分布式 - 程序员朋</li>
+<li>回: 用Redis取代MySQL是错误的 完全取代 算钱，统计全区信息怎么办 怎么做活动 - 如此玄妙</li>
+<li>回: 哦 统计好解决吧… 程序合并一下就好啦 - foo</li>
+<li>回: 同步到 mysql - JoJo</li>
+</ul>
+</li>
+</ol>
+<h2 id="分享链接"><a href="#分享链接" class="headerlink" title="分享链接"></a>分享链接</h2><ol>
+<li><p><a href="http://daily.zhihu.com/story/4577334" target="_blank" rel="noopener">那些年，追过的开源软件和技术</a> - twin</p>
+</li>
+<li><p><a href="http://apiary.io/" target="_blank" rel="noopener">Build beautiful APIs</a> - 安正超</p>
+</li>
+<li><p><a href="http://blog.csdn.net/heiyeshuwu/article/details/44223223" target="_blank" rel="noopener">【原创】Go语言/Golang 知识简单集锦</a> - 黑夜路人</p>
+</li>
+<li><p><a href="http://www.infoq.com/cn/news/2014/08/go-garbage-collector-plan" target="_blank" rel="noopener">Go 1.4+垃圾收集器计划与路线图</a> - 黑夜路人</p>
+</li>
+<li><p><a href="http://www.infoq.com/cn/news/2015/01/golang-15-bootstrapped/" target="_blank" rel="noopener">Go 1.5：使用 Go 来编译 Go</a> - 黑夜路人</p>
+</li>
+<li><p><a href="http://mongoing.com/archives/715" target="_blank" rel="noopener">每天200亿次查询– MongoDB在奇虎360</a> - 零度西瓜</p>
+</li>
+<li><p><a href="http://talkpower.info/blog/algorithm.html" target="_blank" rel="noopener">关于算法面试的一些思考</a> - 黑夜路人</p>
+</li>
+<li><p><a href="http://mp.weixin.qq.com/s?__biz=MzA4MDEwMTMyMA==&amp;mid=200380841&amp;idx=1&amp;sn=6a55fda1a27fd493696f55920fceb586" target="_blank" rel="noopener">360购物小蜜的秘密——再探推荐引擎</a> - 零度西瓜</p>
+</li>
+<li><p><a href="https://code.google.com/p/serek/" target="_blank" rel="noopener">Implementation of PHP serialization for Python</a> - 天天</p>
+</li>
+<li><p><a href="http://zhuanlan.zhihu.com/tomasen/19959647" target="_blank" rel="noopener">为什么我全力推荐Golang</a> - 黑夜路人</p>
+</li>
+</ol>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/优化/" rel="tag">#优化</a>
+          
+            <a href="/tags/架构/" rel="tag">#架构</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2014/10/22/django-orm-use-F-class/" rel="next" title="django-orm中F对象的使用">
+                <i class="fa fa-chevron-left"></i> django-orm中F对象的使用
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/03/23/write-simple-lua-c-extention/" rel="prev" title="Lua C拓展-sleep函数">
+                Lua C拓展-sleep函数 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars3.githubusercontent.com/u/2696746?v=3&s=460" alt="orangleliu" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">orangleliu</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">lzz的编程之旅, Linux, python，lua，openresty</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">42</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">19</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">38</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/orangle" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/orangleliu" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> CSDN
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.orangleliu.info" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> 蓝色石榴
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank" rel="external nofollow">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+                <a href="http://frainmeng.github.io/" target="_blank">Yuan</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#今日话题"><span class="nav-number">1.</span> <span class="nav-text">今日话题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分享链接"><span class="nav-number">2.</span> <span class="nav-text">分享链接</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">orangleliu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

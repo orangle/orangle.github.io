@@ -1,0 +1,834 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-5122147502034582",
+    enable_page_level_ads: true
+    });
+    </script>
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="系统编程," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Orangleliu Notes" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="信号是Unix系统中常见的一种进程间通信方式（IPC），例如我们经常操作的 kill -9 pid 这里的 -9对应的就是 SIGKILL 信号, 9就是这个信号的编号，SIGKILL是它的名称。 由于不同版本的 *nux 的实现会有差异，具体请参照系统API，我这里是OSX，可以使用 man signal查看所有信号的定义。这里简单的学习下Python标准库中信号处理的模块 signal模块">
+<meta name="keywords" content="系统编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python进程间异步通信之signal模块">
+<meta property="og:url" content="http://orangleliu.info/2016/03/06/python-signal-module-simple-use/index.html">
+<meta property="og:site_name" content="Orangleliu Notes">
+<meta property="og:description" content="信号是Unix系统中常见的一种进程间通信方式（IPC），例如我们经常操作的 kill -9 pid 这里的 -9对应的就是 SIGKILL 信号, 9就是这个信号的编号，SIGKILL是它的名称。 由于不同版本的 *nux 的实现会有差异，具体请参照系统API，我这里是OSX，可以使用 man signal查看所有信号的定义。这里简单的学习下Python标准库中信号处理的模块 signal模块">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2016-03-08T14:15:45.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python进程间异步通信之signal模块">
+<meta name="twitter:description" content="信号是Unix系统中常见的一种进程间通信方式（IPC），例如我们经常操作的 kill -9 pid 这里的 -9对应的就是 SIGKILL 信号, 9就是这个信号的编号，SIGKILL是它的名称。 由于不同版本的 *nux 的实现会有差异，具体请参照系统API，我这里是OSX，可以使用 man signal查看所有信号的定义。这里简单的学习下Python标准库中信号处理的模块 signal模块">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always',
+    motion: true
+  };
+</script>
+
+  <title> Python进程间异步通信之signal模块 | Orangleliu Notes </title>
+  <meta name="baidu-site-verification" content="lSLVvLYpze" />
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-84711421-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?c76426a5d9e6794ac5edc882f0445ebd";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+  <script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+    </script>
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Orangleliu Notes</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">爱媳妇，爱生活，Linux，Python</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Python进程间异步通信之signal模块
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-03-06T09:54:21+08:00" content="2016-03-06">
+              2016-03-06
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><a id="more"></a>
+<blockquote>
+<p>信号是Unix系统中常见的一种进程间通信方式（IPC），例如我们经常操作的 <code>kill -9 pid</code> 这里的 <code>-9</code>对应的就是 SIGKILL 信号, 9就是这个信号的编号，SIGKILL是它的名称。 由于不同版本的 *nux 的实现会有差异，具体请参照系统API，我这里是OSX，可以使用 <code>man signal</code>查看所有信号的定义。这里<strong>简单的学习</strong>下Python标准库中信号处理的模块 signal模块.</p>
+</blockquote>
+<h3 id="信号是啥？"><a href="#信号是啥？" class="headerlink" title="信号是啥？"></a>信号是啥？</h3><p>由于signal是系统编程的接口，那么咱们来看看他的概念。</p>
+<blockquote>
+<p>信号(signal)是Linux进程间通信的一种机制，全称为软中断信号，也被称为软中断。信号本质上是在软件层次上对硬件中断机制的一种模拟。</p>
+</blockquote>
+<p>再来看看常用的场景</p>
+<blockquote>
+<p>与其他进程间通信方式（例如管道、共享内存等）相比，信号所能传递的信息比较粗糙，只是一个整数。但正是由于传递的信息量少，信号也便于管理和使用，可以用于系统管理相关的任务，例如通知进程终结、中止或者恢复等。每种信号用一个整型常量宏表示，以SIG开头，比如SIGCHLD、SIGINT等，它们在系统头文件&lt;signal.h&gt;中定义。</p>
+</blockquote>
+<p>更具体的介绍和详细的机制原理，请参考 《Unix环境高级编程》等书籍。</p>
+<p>自己的理解就是：可以给一个正在运行的进程发送不同的信号，然后进程就能立即收到这个通知，并且做出响应的行为。</p>
+<p>常用的几个信号</p>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>名称</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>SIGHUP</td>
+<td>终端挂起或者终止进程。默认动作为终止进程</td>
+</tr>
+<tr>
+<td>2</td>
+<td>SIGINT</td>
+<td>键盘中断 <code>&lt;ctrl+c&gt;</code> 经常会用到。默认动作为终止进程</td>
+</tr>
+<tr>
+<td>3</td>
+<td>SIGQUIT</td>
+<td>键盘退出键被按下。一般用来响应 <code>&lt;ctrl+d&gt;</code>。 默认动作终止进程</td>
+</tr>
+<tr>
+<td>9</td>
+<td>SIGKILL</td>
+<td>强制退出。 shell中经常使用</td>
+</tr>
+<tr>
+<td>14</td>
+<td>SIGALRM</td>
+<td>定时器超时，默认为终止进程</td>
+</tr>
+<tr>
+<td>15</td>
+<td>SIGTERM</td>
+<td>程序结束信号，程序一般会清理完状态在退出，我们一般说的优雅的退出</td>
+</tr>
+</tbody>
+</table>
+<h3 id="signal模块"><a href="#signal模块" class="headerlink" title="signal模块"></a>signal模块</h3><p>在<a href="https://docs.python.org/2/library/signal.html" target="_blank" rel="noopener">文档</a>的开头，讲述了Python signal对于系统的封装和一些使用常识, 使用之前应当认真阅读一下。</p>
+<h4 id="常用的API"><a href="#常用的API" class="headerlink" title="常用的API"></a>常用的API</h4><ul>
+<li><code>signal.signal(signalnum, handler)</code> 针对不同的信号需要定义对应的处理函数，当运行中的程序接受到对应的信号时候，会调用对应的handler。 handler函数应当有2个参数，一个是 signalnum, 另一是 <code>stack frame</code>(None 或者是 <a href="https://docs.python.org/2/reference/datamodel.html#frame-objects" target="_blank" rel="noopener">frame对象</a>)</li>
+</ul>
+<p>例如写一个小程序，来处理 <code>ctrl+c</code>事件和 <code>SIGHUP</code>，也就是1和2信号。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="comment">#orangleliu py2.7</span></span><br><span class="line"><span class="comment">#recv_signal.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> signal</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">handle_int</span><span class="params">(sig, frame)</span>:</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"get signal: %s, I will quit"</span>%sig</span><br><span class="line">    sys.exit(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">handle_hup</span><span class="params">(sig, frame)</span>:</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"get signal: %s"</span>%sig</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    signal.signal(<span class="number">2</span>, handle_int)</span><br><span class="line">    signal.signal(<span class="number">1</span>, handle_hup)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"My pid is %s"</span>%os.getpid()</span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        time.sleep(<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<p>我们来测试下，首先启动程序（根据打印的pid），在另外的窗口输入 <code>kill -1 21838</code> 和 <code>kill -HUP 21838</code>, 最后使用 <code>ctrl+c</code>关闭程序。 程序的输出如下：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># <span class="keyword">python</span> recv_signal.<span class="keyword">py</span></span><br><span class="line">My pid <span class="keyword">is</span> <span class="number">21838</span></span><br><span class="line"><span class="built_in">get</span> signa<span class="variable">l:</span> <span class="number">1</span></span><br><span class="line"><span class="built_in">get</span> signa<span class="variable">l:</span> <span class="number">1</span></span><br><span class="line">^Cget signa<span class="variable">l:</span> <span class="number">2</span>, I will <span class="keyword">quit</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>signal.getsignal(signalnum)</code> 根据signalnum返回信号对应的handler，可能是一个可以调用的Python对象，或者是 <code>signal.SIG_IGN</code>（表示被忽略）, <code>signal.SIG_DFL</code>（默认行为已经被使用） 或 <code>None</code>（Python的handler还没被定义）。</li>
+</ul>
+<p>获取signal中定义的信号num和名称，还有它的handler是什么</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="comment">#orangleliu py2.7</span></span><br><span class="line"><span class="comment">#getsignal_handler.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> signal</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">handle_hup</span><span class="params">(sig, frame)</span>:</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"get signal: %s"</span>%sig</span><br><span class="line"></span><br><span class="line">signal.signal(<span class="number">1</span>, handle_hup)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line"></span><br><span class="line">    ign = signal.SIG_IGN</span><br><span class="line">    dfl = signal.SIG_DFL</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"SIG_IGN"</span>, ign</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"SIG_DFL"</span>, dfl</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"*"</span>*<span class="number">40</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> dir(signal):</span><br><span class="line">        <span class="keyword">if</span> name[:<span class="number">3</span>] == <span class="string">"SIG"</span> <span class="keyword">and</span> name[<span class="number">3</span>] != <span class="string">"_"</span>:</span><br><span class="line">            signum = getattr(signal, name)</span><br><span class="line">            gsig = signal.getsignal(signum)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">print</span> name, signum, gsig</span><br></pre></td></tr></table></figure>
+<p>运行的结果：可以看到大部分信号都是都有默认的行为。</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">SIG_IGN <span class="number">1</span></span><br><span class="line">SIG_DFL <span class="number">0</span></span><br><span class="line">****************************************</span><br><span class="line">SIGABRT <span class="number">6</span> <span class="number">0</span></span><br><span class="line">SIGALRM <span class="number">14</span> <span class="number">0</span></span><br><span class="line">SIGBUS <span class="number">10</span> <span class="number">0</span></span><br><span class="line">SIGCHLD <span class="number">20</span> <span class="number">0</span></span><br><span class="line">SIGCONT <span class="number">19</span> <span class="number">0</span></span><br><span class="line">SIGEMT <span class="number">7</span> <span class="number">0</span></span><br><span class="line">SIGFPE <span class="number">8</span> <span class="number">0</span></span><br><span class="line">SIGHUP <span class="number">1</span> &lt;function handle_hup at <span class="number">0x109371c80</span>&gt;</span><br><span class="line">SIGILL <span class="number">4</span> <span class="number">0</span></span><br><span class="line">SIGINFO <span class="number">29</span> <span class="number">0</span></span><br><span class="line">SIGINT <span class="number">2</span> &lt;built-in function default_int_handler&gt;</span><br><span class="line">SIGIO <span class="number">23</span> <span class="number">0</span></span><br><span class="line">SIGIOT <span class="number">6</span> <span class="number">0</span></span><br><span class="line">SIGKILL <span class="number">9</span> None</span><br><span class="line">SIGPIPE <span class="number">13</span> <span class="number">1</span></span><br><span class="line">SIGPROF <span class="number">27</span> <span class="number">0</span></span><br><span class="line">SIGQUIT <span class="number">3</span> <span class="number">0</span></span><br><span class="line">SIGSEGV <span class="number">11</span> <span class="number">0</span></span><br><span class="line">SIGSTOP <span class="number">17</span> None</span><br><span class="line">SIGSYS <span class="number">12</span> <span class="number">0</span></span><br><span class="line">SIGTERM <span class="number">15</span> <span class="number">0</span></span><br><span class="line">SIGTRAP <span class="number">5</span> <span class="number">0</span></span><br><span class="line">SIGTSTP <span class="number">18</span> <span class="number">0</span></span><br><span class="line">SIGTTIN <span class="number">21</span> <span class="number">0</span></span><br><span class="line">SIGTTOU <span class="number">22</span> <span class="number">0</span></span><br><span class="line">SIGURG <span class="number">16</span> <span class="number">0</span></span><br><span class="line">SIGUSR1 <span class="number">30</span> <span class="number">0</span></span><br><span class="line">SIGUSR2 <span class="number">31</span> <span class="number">0</span></span><br><span class="line">SIGVTALRM <span class="number">26</span> <span class="number">0</span></span><br><span class="line">SIGWINCH <span class="number">28</span> <span class="number">0</span></span><br><span class="line">SIGXCPU <span class="number">24</span> <span class="number">0</span></span><br><span class="line">SIGXFSZ <span class="number">25</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>多线程使用信号</code><br>多线程环境下使用信号，只有main thread可以设置signal的handler，也有它能接收到signal.  下面用一个例子看看效果。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="comment">#orangleliu py2.7</span></span><br><span class="line"><span class="comment">#thread_signal.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> signal</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">usr1_handler</span><span class="params">(num, frame)</span>:</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"received signal %s %s"</span>%(num, threading.currentThread())</span><br><span class="line"></span><br><span class="line">signal.signal(signal.SIGUSR1, usr1_handler)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">thread_get_signal</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment">#如果在子线程中设置signal的handler 会报错</span></span><br><span class="line">    <span class="comment">#ValueError: signal only works in main thread</span></span><br><span class="line">    <span class="comment">#signal.signal(signal.SIGUSR2, usr1_handler)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"waiting for signal in"</span>, threading.currentThread()</span><br><span class="line">    <span class="comment">#sleep 进程直到接收到信号</span></span><br><span class="line">    signal.pause()</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"waiting done"</span></span><br><span class="line"></span><br><span class="line">receiver = threading.Thread(target=thread_get_signal, name=<span class="string">"receiver"</span>)</span><br><span class="line">receiver.start()</span><br><span class="line">time.sleep(<span class="number">0.1</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">send_signal</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"sending signal in "</span>, threading.currentThread()</span><br><span class="line">    os.kill(os.getpid(), signal.SIGUSR1)</span><br><span class="line"></span><br><span class="line">sender = threading.Thread(target=send_signal, name=<span class="string">"sender"</span>)</span><br><span class="line">sender.start()</span><br><span class="line">sender.join()</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">'pid'</span>, os.getpid()</span><br><span class="line"><span class="comment">#这里是为了让程序结束，唤醒pause</span></span><br><span class="line">signal.alarm(<span class="number">2</span>)</span><br><span class="line">receiver.join()</span><br></pre></td></tr></table></figure>
+<p>测试结果</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># python thread_signal.py</span><br><span class="line">waiting for signal in <span class="tag">&lt;<span class="name">Thread(receiver,</span> <span class="attr">started</span> <span class="attr">123145306509312</span>)&gt;</span></span><br><span class="line">sending signal in  <span class="tag">&lt;<span class="name">Thread(sender,</span> <span class="attr">started</span> <span class="attr">123145310715904</span>)&gt;</span></span><br><span class="line">received signal 30 <span class="tag">&lt;<span class="name">_MainThread(MainThread,</span> <span class="attr">started</span> <span class="attr">140735138967552</span>)&gt;</span></span><br><span class="line">pid 23188</span><br><span class="line">[1]    23188 alarm      python thread_signal.py</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>多进程使用信号</code></li>
+</ul>
+<p>主要是模拟下pre-fork模式，代码比较长，另写一篇来说明 [Python 中pre-fork模式的简单实现]</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><a href="https://docs.python.org/2/library/signal.html" target="_blank" rel="noopener">python docs - signal</a></li>
+<li><a href="https://pymotw.com/2/signal/" target="_blank" rel="noopener">pymotw - signal</a></li>
+<li><a href="http://itsjustsosimple.blogspot.com/2014/01/python-signal-handling-and-identifying.html" target="_blank" rel="noopener">Python - Signal handling and identifying stack frame</a></li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/系统编程/" rel="tag">#系统编程</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/02/26/2016-spring-interview-travel/" rel="next" title="2016年后面试之旅">
+                <i class="fa fa-chevron-left"></i> 2016年后面试之旅
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/03/06/python-pre-fork-mode-use/" rel="prev" title="Python中prefork模式的简单实现">
+                Python中prefork模式的简单实现 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars3.githubusercontent.com/u/2696746?v=3&s=460" alt="orangleliu" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">orangleliu</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">lzz的编程之旅, Linux, python，lua，openresty</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">42</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">19</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">38</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/orangle" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/orangleliu" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> CSDN
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.orangleliu.info" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> 蓝色石榴
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank" rel="external nofollow">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+                <a href="http://frainmeng.github.io/" target="_blank">Yuan</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#信号是啥？"><span class="nav-number">1.</span> <span class="nav-text">信号是啥？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#signal模块"><span class="nav-number">2.</span> <span class="nav-text">signal模块</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#常用的API"><span class="nav-number">2.1.</span> <span class="nav-text">常用的API</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">orangleliu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

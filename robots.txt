@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Allow: /archives/
+Allow: /categories/
+
+Sitemap: http://orangleliu.info/sitemap.xml
+Sitemap: http://orangleliu.info/baidusitemap.xml

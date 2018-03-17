@@ -1,0 +1,913 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-5122147502034582",
+    enable_page_level_ads: true
+    });
+    </script>
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="docker," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Orangleliu Notes" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="原文地址 orangleliu 友情翻译  现在Docker是地球上最炙手可热的项目之一，就意味着人民实际上不仅仅是因为这个才喜欢它。话虽如此，我非常喜欢使用容器，服务发现以及所有被创造出的新趣的点子和领域来切换工作作为范例。这个文章中我会简要介绍使用python中的docker-py模块来操作Docker 容器，这里会使用我喜爱的编程工具IPython。 安装docker-py首先需要doc">
+<meta name="keywords" content="docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在Python和IPython中使用Docker">
+<meta property="og:url" content="http://orangleliu.info/2014/08/09/use-docker-in-python-and-ipython/index.html">
+<meta property="og:site_name" content="Orangleliu Notes">
+<meta property="og:description" content="原文地址 orangleliu 友情翻译  现在Docker是地球上最炙手可热的项目之一，就意味着人民实际上不仅仅是因为这个才喜欢它。话虽如此，我非常喜欢使用容器，服务发现以及所有被创造出的新趣的点子和领域来切换工作作为范例。这个文章中我会简要介绍使用python中的docker-py模块来操作Docker 容器，这里会使用我喜爱的编程工具IPython。 安装docker-py首先需要doc">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2015-11-23T09:14:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在Python和IPython中使用Docker">
+<meta name="twitter:description" content="原文地址 orangleliu 友情翻译  现在Docker是地球上最炙手可热的项目之一，就意味着人民实际上不仅仅是因为这个才喜欢它。话虽如此，我非常喜欢使用容器，服务发现以及所有被创造出的新趣的点子和领域来切换工作作为范例。这个文章中我会简要介绍使用python中的docker-py模块来操作Docker 容器，这里会使用我喜爱的编程工具IPython。 安装docker-py首先需要doc">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always',
+    motion: true
+  };
+</script>
+
+  <title> 在Python和IPython中使用Docker | Orangleliu Notes </title>
+  <meta name="baidu-site-verification" content="lSLVvLYpze" />
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-84711421-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?c76426a5d9e6794ac5edc882f0445ebd";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+  <script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+    </script>
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Orangleliu Notes</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">爱媳妇，爱生活，Linux，Python</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                在Python和IPython中使用Docker
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2014-08-09T17:01:59+08:00" content="2014-08-09">
+              2014-08-09
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/翻译/" itemprop="url" rel="index">
+                    <span itemprop="name">翻译</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><a id="more"></a>
+<blockquote>
+<p><a href="http://serverascode.com/2014/06/05/docker-python.html" target="_blank" rel="noopener">原文地址</a> orangleliu 友情翻译</p>
+</blockquote>
+<p>现在Docker是地球上最炙手可热的项目之一，就意味着人民实际上不仅仅是因为这个才喜欢它。<br>话虽如此，我非常喜欢使用容器，服务发现以及所有被创造出的新趣的点子和领域来切换工作作为范例。<br>这个文章中我会简要介绍使用python中的docker-py模块来操作Docker 容器，这里会使用我喜爱的编程工具IPython。</p>
+<h2 id="安装docker-py"><a href="#安装docker-py" class="headerlink" title="安装docker-py"></a>安装docker-py</h2><p>首先需要docker-py。注意这里的案例中我将会使用Ubuntu Trusty 14.04版本。</p>
+<pre><code>$ pip install docker-py
+</code></pre><h2 id="IPyhton"><a href="#IPyhton" class="headerlink" title="IPyhton"></a>IPyhton</h2><p>我真的很喜欢用IPython来探索Python。 它像是一共高级的python Shell，但是可以做的更多。</p>
+<pre><code>$ sudo apt-get install ipython
+SNIP!
+$ ipython
+Python 2.7.6 (default, Mar 22 2014, 22:59:56)
+Type &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+
+IPython 1.2.1 -- An enhanced Interactive Python.
+?         -&gt; Introduction and overview of IPython&apos;s features.
+%quickref -&gt; Quick reference.
+help      -&gt; Python&apos;s own help system.
+object?   -&gt; Details about &apos;object&apos;, use &apos;object??&apos; for extra details.
+
+In [1]:
+</code></pre><h2 id="安装-docker"><a href="#安装-docker" class="headerlink" title="安装 docker"></a>安装 docker</h2><p>如果没有安装Docker，那首先安装docker</p>
+<pre><code>$ sudo apt-get install docker.io
+</code></pre><p>然后把 docker.io 起个别名 docker</p>
+<pre><code>$ alias docker=&apos;docker.io&apos;
+$ docker version
+Client version: 0.9.1
+Go version (client): go1.2.1
+Git commit (client): 3600720
+Server version: 0.9.1
+Git commit (server): 3600720
+Go version (server): go1.2.1
+Last stable version: 0.11.1, please update docker
+</code></pre><p>Docker现在应该有个socket开启，我们可以用来连接。</p>
+<pre><code>$ ls /var/run/docker.sock
+/var/run/docker.sock
+</code></pre><h2 id="Pull-镜像"><a href="#Pull-镜像" class="headerlink" title="Pull 镜像"></a>Pull 镜像</h2><p>让我们下载 busybox镜像</p>
+<pre><code>$ docker pull busybox
+Pulling repository busybox
+71e18d715071: Download complete
+98b9fdab1cb6: Download complete
+1277aa3f93b3: Download complete
+6e0a2595b580: Download complete
+511136ea3c5a: Download complete
+b6c0d171b362: Download complete
+8464f9ac64e8: Download complete
+9798716626f6: Download complete
+fc1343e2fca0: Download complete
+f3c823ac7aa6: Download complete
+</code></pre><p>现在我们准备使用 docker-py 了。</p>
+<h2 id="使用-docker-py"><a href="#使用-docker-py" class="headerlink" title="使用 docker-py"></a>使用 docker-py</h2><p>现在我们有了docker-py , IPython, Docker 和 busybox 镜像，我们就能建立一些容器。<br>如果你不是很熟悉IPython，可以参照这个教程学习（<a href="http://ipython.org/ipython-doc/stable/interactive/tutorial.html），" target="_blank" rel="noopener">http://ipython.org/ipython-doc/stable/interactive/tutorial.html），</a><br>IPython是十分强大的。</p>
+<p>首先启动一个IPython ，导入docker模块。</p>
+<pre><code>$ ipython
+Python 2.7.6 (default, Mar 22 2014, 22:59:56)
+Type &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+
+IPython 1.2.1 -- An enhanced Interactive Python.
+?         -&gt; Introduction and overview of IPython&apos;s features.
+%quickref -&gt; Quick reference.
+help      -&gt; Python&apos;s own help system.
+object?   -&gt; Details about &apos;object&apos;, use &apos;object??&apos; for extra details.
+
+In [1]: import docker
+</code></pre><p>然后我们建立一个连接到Docker</p>
+<pre><code>In [2]: c = docker.Client(base_url=&apos;unix://var/run/docker.sock&apos;,
+   ...:                   version=&apos;1.9&apos;,
+   ...:                   timeout=10)
+</code></pre><p>现在我们已经连接到Docker。</p>
+<p>IPython使用tab键来补全的。 如果 输入 “c.” 然后按下tab键，IPython会显示Docker连接对象所有的方法和属性。</p>
+<pre><code>In [3]: c.
+c.adapters                      c.headers                       c.pull
+c.attach                        c.history                       c.push
+c.attach_socket                 c.hooks                         c.put
+c.auth                          c.images                        c.remove_container
+c.base_url                      c.import_image                  c.remove_image
+c.build                         c.info                          c.request
+c.cert                          c.insert                        c.resolve_redirects
+c.close                         c.inspect_container             c.restart
+c.commit                        c.inspect_image                 c.search
+c.containers                    c.kill                          c.send
+c.cookies                       c.login                         c.start
+c.copy                          c.logs                          c.stop
+c.create_container              c.max_redirects                 c.stream
+c.create_container_from_config  c.mount                         c.tag
+c.delete                        c.options                       c.top
+c.diff                          c.params                        c.trust_env
+c.events                        c.patch                         c.verify
+c.export                        c.port                          c.version
+c.get                           c.post                          c.wait
+c.get_adapter                   c.prepare_request
+c.head                          c.proxies
+</code></pre><p>让我们来看下c.images   我输入一个 “?”在c.之后，ipython 会提供这个对象的详细信息。</p>
+<pre><code>In [5]: c.images?
+Type:       instancemethod
+String Form:&lt;bound method Client.images of &lt;docker.client.Client object at 0x7f3acc731790&gt;&gt;
+File:       /usr/local/lib/python2.7/dist-packages/docker/client.py
+Definition: c.images(self, name=None, quiet=False, all=False, viz=False)
+Docstring:  &lt;no docstring&gt;
+</code></pre><p>获取busybox 镜像。</p>
+<pre><code>In [6]: c.images(name=&quot;busybox&quot;)
+Out[6]:
+[{u&apos;Created&apos;: 1401402591,
+  u&apos;Id&apos;: u&apos;71e18d715071d6ba89a041d1e696b3d201e82a7525fbd35e2763b8e066a3e4de&apos;,
+  u&apos;ParentId&apos;: u&apos;8464f9ac64e87252a91be3fbb99cee20cda3188de5365bec7975881f389be343&apos;,
+  u&apos;RepoTags&apos;: [u&apos;busybox:buildroot-2013.08.1&apos;],
+  u&apos;Size&apos;: 0,
+  u&apos;VirtualSize&apos;: 2489301},
+ {u&apos;Created&apos;: 1401402590,
+  u&apos;Id&apos;: u&apos;1277aa3f93b3da774690bc4f0d8bf257ff372e23310b4a5d3803c180c0d64cd5&apos;,
+  u&apos;ParentId&apos;: u&apos;f3c823ac7aa6ef78d83f19167d5e2592d2c7f208058bc70bf5629d4bb4ab996c&apos;,
+  u&apos;RepoTags&apos;: [u&apos;busybox:ubuntu-14.04&apos;],
+  u&apos;Size&apos;: 0,
+  u&apos;VirtualSize&apos;: 5609404},
+ {u&apos;Created&apos;: 1401402589,
+  u&apos;Id&apos;: u&apos;6e0a2595b5807b4f8c109f3c6c5c3d59c9873a5650b51a4480b61428427ab5d8&apos;,
+  u&apos;ParentId&apos;: u&apos;fc1343e2fca04a455f803ba66d1865739e0243aca6c9d5fd55f4f73f1e28456e&apos;,
+  u&apos;RepoTags&apos;: [u&apos;busybox:ubuntu-12.04&apos;],
+  u&apos;Size&apos;: 0,
+  u&apos;VirtualSize&apos;: 5454693},
+ {u&apos;Created&apos;: 1401402587,
+  u&apos;Id&apos;: u&apos;98b9fdab1cb6e25411eea5c44241561326c336d3e0efae86e0239a1fe56fbfd4&apos;,
+  u&apos;ParentId&apos;: u&apos;9798716626f6ae4e6b7f28451c0a1a603dc534fe5d9dd3900150114f89386216&apos;,
+  u&apos;RepoTags&apos;: [u&apos;busybox:buildroot-2014.02&apos;, u&apos;busybox:latest&apos;],
+  u&apos;Size&apos;: 0,
+  u&apos;VirtualSize&apos;: 2433303}]
+</code></pre><p>建立一个容器。 注意我添加一个可以将要运行的命令，这里用的是”env”命令。</p>
+<pre><code>In [8]: c.create_container(image=&quot;busybox&quot;, command=&quot;env&quot;)
+Out[8]:
+{u&apos;Id&apos;: u&apos;584459a09e6d4180757cb5c10ac354ca46a32bf8e122fa3fb71566108f330c87&apos;,
+ u&apos;Warnings&apos;: None}
+</code></pre><p>使用ID来启动这个容器</p>
+<pre><code>In [9]: c.start(container=&quot;584459a09e6d4180757cb5c10ac354ca46a32bf8e122fa3fb71566108f330c87&quot;)
+</code></pre><p>我们可以检查日志，应该可以看到当容器创建的时候 ，我们配置的”env”命令的输出。</p>
+<pre><code>In [11]: c.logs(container=&quot;584459a09e6d4180757cb5c10ac354ca46a32bf8e122fa3fb71566108f330c87&quot;)
+Out[11]: &apos;HOME=/\nPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\nHOSTNAME=584459a09e6d\n&apos;
+</code></pre><p>如果使用docker命令行，使用同样的命令行选项运行一个容器，应该可以看到类似的信息。</p>
+<pre><code>$ docker run busybox env
+HOME=/
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=ce3ad38a52bf
+</code></pre><p>据我所知，docker-py没有运行选项，我们只能创建一个容器然后启动它。</p>
+<p>以下是一个案例：</p>
+<pre><code>In [17]: busybox = c.create_container(image=&quot;busybox&quot;, command=&quot;echo hi&quot;)
+
+In [18]: busybox?
+Type:       dict
+String Form:{u&apos;Id&apos;: u&apos;34ede853ee0e95887ea333523d559efae7dcbe6ae7147aa971c544133a72e254&apos;, u&apos;Warnings&apos;: None}
+Length:     2
+Docstring:
+dict() -&gt; new empty dictionary
+dict(mapping) -&gt; new dictionary initialized from a mapping object&apos;s
+    (key, value) pairs
+dict(iterable) -&gt; new dictionary initialized as if via:
+    d = {}
+    for k, v in iterable:
+        d[k] = v
+dict(**kwargs) -&gt; new dictionary initialized with the name=value pairs
+    in the keyword argument list.  For example:  dict(one=1, two=2)
+
+In [19]: c.start(busybox.get(&quot;Id&quot;))
+
+In [20]: c.logs(busybox.get(&quot;Id&quot;))
+Out[20]: &apos;hi\n&apos;
+</code></pre><p>如果你还没有使用过busybox镜像，我建议你使用下。我也建议debain下的jessie镜像，它只有120MB，比Ubuntu镜像要小。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Docker是一个吸引人的新系统，可以用来建立有趣的新技术应用，特别是云服务相关的。使用IPython我们探索了怎么使用<br>docker-py模块来创建docker 容器。 现在使用python，我们可以结合docker和容易 创造出很多新的点子。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/docker/" rel="tag">#docker</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2014/08/09/celery-best-practice/" rel="next" title="Celery最佳实践-正确使用celery的7条建议">
+                <i class="fa fa-chevron-left"></i> Celery最佳实践-正确使用celery的7条建议
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2014/08/18/docker-first-time-useed/" rel="prev" title="Docker初次接触">
+                Docker初次接触 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars3.githubusercontent.com/u/2696746?v=3&s=460" alt="orangleliu" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">orangleliu</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">lzz的编程之旅, Linux, python，lua，openresty</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">42</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">19</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">38</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/orangle" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/orangleliu" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> CSDN
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.orangleliu.info" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> 蓝色石榴
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank" rel="external nofollow">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+                <a href="http://frainmeng.github.io/" target="_blank">Yuan</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装docker-py"><span class="nav-number">1.</span> <span class="nav-text">安装docker-py</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IPyhton"><span class="nav-number">2.</span> <span class="nav-text">IPyhton</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-docker"><span class="nav-number">3.</span> <span class="nav-text">安装 docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pull-镜像"><span class="nav-number">4.</span> <span class="nav-text">Pull 镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-docker-py"><span class="nav-number">5.</span> <span class="nav-text">使用 docker-py</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">orangleliu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

@@ -1,0 +1,819 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-5122147502034582",
+    enable_page_level_ads: true
+    });
+    </script>
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="logging," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Orangleliu Notes" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="标准库logging模块是线程安全的，在单进程应用中一般的问题集中在如何切分等，多进程中使用logging相对来说就要复杂一些，需要定制的handler来解决多进程安全问题，或者使用开源方案来解决。下面零零散散记录一些使用的心得。  日志切分logging标准库中提供的日志切分的方式有  RotatingFileHandler 基于文件大小的切分，支持多个backup TimedRotatin">
+<meta name="keywords" content="logging">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python logging 模块使用杂记">
+<meta property="og:url" content="http://orangleliu.info/2016/03/14/python-logging-somenotes/index.html">
+<meta property="og:site_name" content="Orangleliu Notes">
+<meta property="og:description" content="标准库logging模块是线程安全的，在单进程应用中一般的问题集中在如何切分等，多进程中使用logging相对来说就要复杂一些，需要定制的handler来解决多进程安全问题，或者使用开源方案来解决。下面零零散散记录一些使用的心得。  日志切分logging标准库中提供的日志切分的方式有  RotatingFileHandler 基于文件大小的切分，支持多个backup TimedRotatin">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://orangleliu.info/img/logging_flow.png">
+<meta property="og:image" content="http://orangleliu.info/img/logging_class.png">
+<meta property="og:updated_time" content="2016-11-11T02:29:09.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python logging 模块使用杂记">
+<meta name="twitter:description" content="标准库logging模块是线程安全的，在单进程应用中一般的问题集中在如何切分等，多进程中使用logging相对来说就要复杂一些，需要定制的handler来解决多进程安全问题，或者使用开源方案来解决。下面零零散散记录一些使用的心得。  日志切分logging标准库中提供的日志切分的方式有  RotatingFileHandler 基于文件大小的切分，支持多个backup TimedRotatin">
+<meta name="twitter:image" content="http://orangleliu.info/img/logging_flow.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always',
+    motion: true
+  };
+</script>
+
+  <title> python logging 模块使用杂记 | Orangleliu Notes </title>
+  <meta name="baidu-site-verification" content="lSLVvLYpze" />
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-84711421-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?c76426a5d9e6794ac5edc882f0445ebd";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+  <script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+    </script>
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Orangleliu Notes</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">爱媳妇，爱生活，Linux，Python</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                python logging 模块使用杂记
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-03-14T18:25:26+08:00" content="2016-03-14">
+              2016-03-14
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><a id="more"></a>
+<blockquote>
+<p>标准库logging模块是线程安全的，在单进程应用中一般的问题集中在如何切分等，多进程中使用logging相对来说就要复杂一些，需要定制的handler来解决多进程安全问题，或者使用开源方案来解决。下面零零散散记录一些使用的心得。</p>
+</blockquote>
+<h3 id="日志切分"><a href="#日志切分" class="headerlink" title="日志切分"></a>日志切分</h3><p>logging标准库中提供的日志切分的方式有</p>
+<ul>
+<li>RotatingFileHandler 基于文件大小的切分，支持多个backup</li>
+<li>TimedRotatingFileHandler 基于时间间隔的切分，支持多种时间单位，多个backup。 这种方式在程序启动时会用log文件最后修改的时间戳做start time计算，如果我定义24小时切割一次，而程序每12小时重启一次，那么永远都不会切割日志，因为每次程序启动到结束不够24小时，这就是它不好的地方。</li>
+<li>很多时候需要能按整点时间轮询的日志 例如每天只是这一天24小时的记录，每小时只是当前这个小时的记录。标准库无法满足，需要自己写handler，当然现成的轮子也很多。</li>
+</ul>
+<p>当日志文件被移动或删除后:</p>
+<ul>
+<li>FileHandler会继续将日志输出至原有的文件描述符, 从而导致日志切分后日志丢失.</li>
+<li>WatchedFileHandler会检测文件是否被移动或删除, 如果有, 会新建日志文件, 并输出日志到新建的文件. 这个handerl+corntab可以很容易的实现日志的割切。</li>
+</ul>
+<h3 id="多进程日志"><a href="#多进程日志" class="headerlink" title="多进程日志"></a>多进程日志</h3><ul>
+<li>多进程往一个日志文件写日志（日志可能会错行，变得杂乱无序)</li>
+<li>进程安全方案: 看到有些方案是使用文件锁来实现实现同步，也看到有些是使用多进程的queue来实现同步，或者通过 sockethandler 传送给单独服务</li>
+</ul>
+<h4 id="ConcurrentLogHandler"><a href="#ConcurrentLogHandler" class="headerlink" title="ConcurrentLogHandler"></a>ConcurrentLogHandler</h4><p>看到stackoverflow上很多人回答用 <a href="https://pypi.python.org/pypi/ConcurrentLogHandler/0.9.1" target="_blank" rel="noopener">ConcurrentLogHandler</a>来解决多logging进程安全问题，它是RotatingFileHandler的多进程版本，使用<code>文件锁</code>来保持同步。</p>
+<p>源码<a href="http://bazaar.launchpad.net/~lowell-alleman/python-concurrent-log-handler/master/files" target="_blank" rel="noopener">在这里</a>, 结合多进程Gunicorn+Django来测了测，使用方法<a href="https://pypi.python.org/pypi/ConcurrentLogHandler/0.9.1" target="_blank" rel="noopener">参见文档</a>，非常简单方面.</p>
+<p>我这1000并发测试的情况下，性能影响不大，TPS 大概百分之十（这个主要取决于日志的复杂度）损耗，日志同步和轮询都没问题。 更大规模和复杂的情况还不清楚会怎样，在小程序中使用应该问题不大，要求较高的系统需要进一步测试。</p>
+<h3 id="socket-日志"><a href="#socket-日志" class="headerlink" title="socket 日志"></a>socket 日志</h3><p>官方的 <a href="https://docs.python.org/2/howto/logging-cookbook.html" target="_blank" rel="noopener">loging cookbook</a> 中推荐在多进程中使用 <code>SocketHandler</code>来解决日志问题, 还给出来一个简单的例子 <a href="https://docs.python.org/2/howto/logging-cookbook.html#sending-and-receiving-logging-events-across-a-network" target="_blank" rel="noopener">here</a>。 另外还有很多开源的方案，Syslog，Sentry，或者Github找些别人写的日志收集server，自己撸一个轮子等，选择很多，适合日志集中收集管理。</p>
+<h3 id="使用总结"><a href="#使用总结" class="headerlink" title="使用总结"></a>使用总结</h3><ul>
+<li>root 级别的设置只在应用中进行，不要在模块中设置</li>
+<li>一个文件中有多个类，日志最好每个类一个logger，否则在生产中很难快速定位问题</li>
+<li><code>self.logger = logging.getLogger(type(self).__name__)</code> 这种方式在base class设置，这样每个子类都有不同的logger名称</li>
+<li>规范format，这样容易处理日志</li>
+<li>logging对整体的性能有些影响的，如果想减少到更小可以 <code>import syslog</code>， 但是怎么回溯，收集日志等要好好盘算下，<a href="http://www.aminus.org/blogs/index.php/2008/07/03/writing-high-efficiency-large-python-sys-1?blog=2" target="_blank" rel="noopener">use nothing but local syslog</a></li>
+<li>需要记录一个异常的错误栈情况，可以使用 Logger.exception() 方法</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#logger 是已经初始化的Logger</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">print</span> err</span><br><span class="line">except <span class="keyword">Exception</span> <span class="keyword">as</span> e:</span><br><span class="line">    logger.<span class="keyword">exception</span>(<span class="string">""</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="源码阅读"><a href="#源码阅读" class="headerlink" title="源码阅读"></a>源码阅读</h3><p>python2.6 的logging模块源码，<a href="https://github.com/python/cpython/tree/2.6/Lib/logging" target="_blank" rel="noopener">源码在这里</a>。日志相关的是PEPE是 <code>pep282</code>。</p>
+<p>logging模块一共是3个文件</p>
+<ul>
+<li><code>__init__.py</code>  常量定义，基础的API，logger，handler的父类，handler的适配器等等，最核心的代码</li>
+<li><code>config.py</code>  配置读取相关模块</li>
+<li><code>handlers.py</code>  不同的handlers来处理日志的输出策略，如果自己写handler 这里是最好的例子</li>
+</ul>
+<h4 id="通过代码来看看使用-basicConfig-发生了什么？"><a href="#通过代码来看看使用-basicConfig-发生了什么？" class="headerlink" title="通过代码来看看使用 basicConfig 发生了什么？"></a>通过代码来看看使用 basicConfig 发生了什么？</h4><p>你可以看这个文章<a href="http://atlee.ca/blog/posts/diving-into-python-logging.html" target="_blank" rel="noopener">dive into logging</a>, 其实看下代码就能明白。</p>
+<p>在 <code>import logging</code> 的时候会自动生成一个 root logger, name就是root，默认级别是 warning</p>
+<p>源码里是这样的</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">root = RootLogger(WARNING)</span><br><span class="line">Logger<span class="selector-class">.root</span> = root</span><br><span class="line">Logger<span class="selector-class">.manager</span> = Manager(Logger.root)</span><br></pre></td></tr></table></figure>
+<p>这个默认的logger也basicConfig需要才能使用，basicConfig其实就是设置root logger的handler。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">1</span>]: <span class="keyword">import</span> logging</span><br><span class="line"></span><br><span class="line">In [<span class="number">2</span>]: logger = logging.getLo</span><br><span class="line">logging.getLogger       logging.getLoggerClass</span><br><span class="line"></span><br><span class="line">In [<span class="number">2</span>]: logger = logging.getLogger(<span class="string">'lzz'</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">3</span>]: logger.info(<span class="string">'lzz'</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">4</span>]: logger.root.info(<span class="string">"lzz"</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">5</span>]: logging.basicConfig(level=logging.INFO)</span><br><span class="line"></span><br><span class="line">In [<span class="number">6</span>]: logging.root.info(<span class="string">"hello"</span>)</span><br><span class="line">INFO:root:hello</span><br><span class="line"></span><br><span class="line">In [<span class="number">7</span>]: logger.info(<span class="string">'lzz'</span>)</span><br><span class="line">INFO:lzz:lzz</span><br></pre></td></tr></table></figure>
+<h4 id="阅读总结"><a href="#阅读总结" class="headerlink" title="阅读总结"></a>阅读总结</h4><ul>
+<li>Logger 之间是一个树型结构，root Logger是根节点，父子关系等由Manager类处理</li>
+<li>一般是获取一个Logger实例，设置log级别，添加一个或者多个Handler，一个或者多个Filter，Handler中设置format日志格式。</li>
+<li>执行一个logger方法的过程： 例如<code>logger.info(&quot;hi boy&quot;)</code>,  首先logger检查level是否符合，如果level正确，调用 <code>Logger._log()</code>方法，根据log内容组成 <code>LogRecord</code>, 调用<code>Logger.handle(self, record)</code>方法。</li>
+</ul>
+<p><code>Logger.handler()</code> 检查logger是否disable，如果可用, 再调用 <code>Logger.filter(record)</code>, 根据设置的过滤器来过滤日志。 如果record没有过滤掉，那么继续调用 <code>Logger.callHandler(self, record)</code>, 根据配置的handlers交给handlers来处理日志。说了一通，不如直接看<a href="https://docs.python.org/2/howto/logging.html#logging-flow" target="_blank" rel="noopener">官方的流程图</a></p>
+<p><img src="/img/logging_flow.png" alt="官方的流程图"></p>
+<ul>
+<li>Filter 比设置日志level有更大的灵活性, Logger和Handlers都可以设置Filter, 例如写一个过滤 hello关键字的Filter。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"></span><br><span class="line">logger = logging.getLogger(__name__)</span><br><span class="line">logging.basicConfig(level=logging.INFO)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HelloFilter</span><span class="params">(logging.Filter)</span>:</span></span><br><span class="line">    <span class="comment">#overwrite filter method, 最好先看看LogRecord这个类</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">filter</span><span class="params">(self, record)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> record.msg.find(<span class="string">'hello'</span>) &gt; <span class="number">-1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line">logger.addFilter(HelloFilter())</span><br><span class="line">logger.info(<span class="string">"hello"</span>)</span><br><span class="line">logger.info(<span class="string">"hello boy"</span>)</span><br><span class="line">logger.info(<span class="string">"hi girl"</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>简单的类关系如下图</li>
+</ul>
+<p><img src="/img/logging_class.png" alt="class_pic"></p>
+<h3 id="阅读"><a href="#阅读" class="headerlink" title="阅读"></a>阅读</h3><ul>
+<li><a href="https://docs.python.org/2/library/logging.html#module-logging" target="_blank" rel="noopener">logging api</a> 查询手册</li>
+<li><a href="https://docs.python.org/2/howto/logging.html" target="_blank" rel="noopener">logging howto</a> 官方教程，基础知识，全面实用</li>
+<li><a href="https://docs.python.org/2/howto/logging-cookbook.html" target="_blank" rel="noopener">logging cookbook</a>  进阶必读，覆盖常用情景</li>
+<li><a href="http://www.blog.pythonlibrary.org/2014/02/11/python-how-to-create-rotating-logs/" target="_blank" rel="noopener">python-how-to-create-rotating-logs</a>  简单明了说明了 两个常用的日志轮询handler怎么使用</li>
+<li><a href="http://www.shutupandship.com/2012/02/how-python-logging-module-works.html" target="_blank" rel="noopener">how-python-logging-module-works</a> 源码笔记，看懂logging怎样工作</li>
+<li><a href="https://www.python.org/dev/peps/pep-0282/" target="_blank" rel="noopener">pep282</a></li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/logging/" rel="tag">#logging</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/03/06/python-pre-fork-mode-use/" rel="next" title="Python中prefork模式的简单实现">
+                <i class="fa fa-chevron-left"></i> Python中prefork模式的简单实现
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/04/05/reading-list-201602/" rel="prev" title="lzz's reading list 04">
+                lzz's reading list 04 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars3.githubusercontent.com/u/2696746?v=3&s=460" alt="orangleliu" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">orangleliu</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">lzz的编程之旅, Linux, python，lua，openresty</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">42</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">19</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">38</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/orangle" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/orangleliu" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> CSDN
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.orangleliu.info" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> 蓝色石榴
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank" rel="external nofollow">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+                <a href="http://frainmeng.github.io/" target="_blank">Yuan</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#日志切分"><span class="nav-number">1.</span> <span class="nav-text">日志切分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多进程日志"><span class="nav-number">2.</span> <span class="nav-text">多进程日志</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ConcurrentLogHandler"><span class="nav-number">2.1.</span> <span class="nav-text">ConcurrentLogHandler</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#socket-日志"><span class="nav-number">3.</span> <span class="nav-text">socket 日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用总结"><span class="nav-number">4.</span> <span class="nav-text">使用总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#源码阅读"><span class="nav-number">5.</span> <span class="nav-text">源码阅读</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#通过代码来看看使用-basicConfig-发生了什么？"><span class="nav-number">5.1.</span> <span class="nav-text">通过代码来看看使用 basicConfig 发生了什么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#阅读总结"><span class="nav-number">5.2.</span> <span class="nav-text">阅读总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阅读"><span class="nav-number">6.</span> <span class="nav-text">阅读</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">orangleliu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

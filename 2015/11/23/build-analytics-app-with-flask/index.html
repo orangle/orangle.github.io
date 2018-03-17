@@ -1,0 +1,843 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-5122147502034582",
+    enable_page_level_ads: true
+    });
+    </script>
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="flask,埋点," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Orangleliu Notes" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="原文Saturday morning hacks: Building an Analytics App with Flask - 由orangleliu友情翻译 ，主要是通过埋点技术来实现web网页的统计分析需求  几年前我曾今写过一篇 使用Cassandra构建分析服务 当时只是为了好玩写的，实际上 Cassandra 根本不适合我真正的需求，所以我决定写些简单的东西。 我很高兴宣布新的统计">
+<meta name="keywords" content="flask,埋点">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flask构建网站分析应用">
+<meta property="og:url" content="http://orangleliu.info/2015/11/23/build-analytics-app-with-flask/index.html">
+<meta property="og:site_name" content="Orangleliu Notes">
+<meta property="og:description" content="原文Saturday morning hacks: Building an Analytics App with Flask - 由orangleliu友情翻译 ，主要是通过埋点技术来实现web网页的统计分析需求  几年前我曾今写过一篇 使用Cassandra构建分析服务 当时只是为了好玩写的，实际上 Cassandra 根本不适合我真正的需求，所以我决定写些简单的东西。 我很高兴宣布新的统计">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://orangleliu.info/img/analytics-flow.png">
+<meta property="og:image" content="http://orangleliu.info/img/bdb.png">
+<meta property="og:updated_time" content="2015-11-23T09:37:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flask构建网站分析应用">
+<meta name="twitter:description" content="原文Saturday morning hacks: Building an Analytics App with Flask - 由orangleliu友情翻译 ，主要是通过埋点技术来实现web网页的统计分析需求  几年前我曾今写过一篇 使用Cassandra构建分析服务 当时只是为了好玩写的，实际上 Cassandra 根本不适合我真正的需求，所以我决定写些简单的东西。 我很高兴宣布新的统计">
+<meta name="twitter:image" content="http://orangleliu.info/img/analytics-flow.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always',
+    motion: true
+  };
+</script>
+
+  <title> Flask构建网站分析应用 | Orangleliu Notes </title>
+  <meta name="baidu-site-verification" content="lSLVvLYpze" />
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-84711421-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?c76426a5d9e6794ac5edc882f0445ebd";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+  <script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+    </script>
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Orangleliu Notes</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">爱媳妇，爱生活，Linux，Python</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Flask构建网站分析应用
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2015-11-23T13:50:11+08:00" content="2015-11-23">
+              2015-11-23
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/翻译/" itemprop="url" rel="index">
+                    <span itemprop="name">翻译</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><a id="more"></a>
+<blockquote>
+<p>原文<a href="http://charlesleifer.com/blog/saturday-morning-hacks-building-an-analytics-app-with-flask/" target="_blank" rel="noopener">Saturday morning hacks: Building an Analytics App with Flask</a> - 由<a href="http://orangleliu.info/">orangleliu</a>友情翻译 ，主要是通过埋点技术来实现web网页的统计分析需求</p>
+</blockquote>
+<p>几年前我曾今写过一篇 <a href="http://charlesleifer.com/blog/experimenting-with-an-analytics-web-service-using-python-and-cassandra-/" target="_blank" rel="noopener">使用Cassandra构建分析服务</a> 当时只是为了好玩写的，实际上 <code>Cassandra</code> 根本不适合我真正的需求，所以我决定写些简单的东西。 我很高兴宣布新的统计应用在过去的5个月非常稳定的运行，并且只消耗了 <code>20M</code> 内存。这篇文章我会展示怎样使用 Flask 来构建一个轻量的统计分析服务。</p>
+<h3 id="分析请求-响应流程"><a href="#分析请求-响应流程" class="headerlink" title="分析请求/响应流程"></a>分析请求/响应流程</h3><p>我们将要构建的分析服务有点类似 Google Analytics (更像是个简化版)</p>
+<p>工作流程：</p>
+<ul>
+<li>每个要被跟踪的页面都会使用 <code>&lt;script&gt;</code> 标签引入一个 JavaScript 文件，这个文件由我们的应用(例如，放在被分析网站的基础模板中)</li>
+<li>当有人访问你的网站的时候，他们的浏览器会执行这个 JavaScript 文件</li>
+<li>JavaScript 中的代码可以读取当前网页的标题，URL，还有其他感兴趣的元素。</li>
+<li>最酷的地方是，这个脚本会动态的创建一个 <code>&lt;img&gt;</code> 标签(一般来说是个1*1px的空白图片)，这个标签的 src 属性的 URL 正式指向我们的分析应用</li>
+<li>当前页面中的信息收集完毕并且编码之后就会设置成图片的 src 属性，我们的分析服务端就会收到并解析这些信息</li>
+<li>分析服务解析完成，把这条信息存入数据库，然后返回一个1像素的gif图片</li>
+</ul>
+<p>下面是交互图:<br><img src="/img/analytics-flow.png" alt="pic1"></p>
+<h3 id="设计考虑"><a href="#设计考虑" class="headerlink" title="设计考虑"></a>设计考虑</h3><p>因为要在资源有限的 VPS(可以认为是配置非常低的服务器) 上运行, 我的博客也没有多少流浪，所以要轻量，灵活。不管什么类型的项目我都喜欢使用 Flask，这个项目更是如此。 我们将使用 <a href="http://docs.peewee-orm.com/" target="_blank" rel="noopener">peewee ORM</a> 来存储PV(页面访问数据） 和查询分析数据。 告诉大家吧，我们的应用不会超过100行代码（包括注释）。</p>
+<ul>
+<li>PV （page view）页面访问</li>
+</ul>
+<h3 id="数据库相关"><a href="#数据库相关" class="headerlink" title="数据库相关"></a>数据库相关</h3><p>为了能方面的查询数据，我们将使用关系型数据库存储PV数据。 我选择了 BerkeleyDB’s SQLite 接口，因为它是个轻量的嵌入数据库，也不会用多少内存。我曾考虑过 SQLite， 但是 BerkeleyDB 在并发访问时候比 SQLite <a href="http://www.oracle.com/technetwork/database/berkeleydb/learnmore/bdbvssqlite-wp-186779.pdf" target="_blank" rel="noopener">性能高很多</a>。 当分析应用遭到某些破坏的时候，仍然可以保持稳定运行。</p>
+<p><img src="/img/bdb.png" alt="pic2"></p>
+<p>如果你已经安装了 Postgresql 或者 MySQL， 那么请自由选择。</p>
+<h3 id="WSGI-Server"><a href="#WSGI-Server" class="headerlink" title="WSGI Server"></a>WSGI Server</h3><p>虽然有非常多的选择，但是我还是比较喜欢使用 <a href="http://www.gevent.org/" target="_blank" rel="noopener">gevent</a>。 Gevent 是一个基于协程的网络库，使用了 libev 的事件机制来实现轻线程(greenlets)。 通过使用 monkey-patching ，不需要特殊的API或者是语法，gevent 会把正常阻塞的 python 程序变成非阻塞的。 Gevent 的 WSGI server，尽管非常基础，但是有着非常高的性能和非常低的资源消耗。 和数据库一样，如果你使用别的库比较顺手，请自由选择。</p>
+<h3 id="创建-virtualenv"><a href="#创建-virtualenv" class="headerlink" title="创建 virtualenv"></a>创建 virtualenv</h3><p>我们先给这个分析应用创建一个隔离的环境，安装上 <code>flask</code>, <code>peewee</code>（选择安装gevent）.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ virtualenv analytics</span><br><span class="line">New python executable <span class="keyword">in</span> analytics/bin/python2</span><br><span class="line">Also creating executable <span class="keyword">in</span> analytics/bin/python</span><br><span class="line">Installing setuptools, pip...done.</span><br><span class="line"></span><br><span class="line">$ cd analytics/</span><br><span class="line">$ source bin/activate</span><br><span class="line">$ pip install flask peewee</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">Successfully installed flask peewee Werkzeug Jinja2 itsdangerous markupsafe</span><br><span class="line">Cleaning up...</span><br><span class="line"></span><br><span class="line">$ pip install gevent  <span class="comment">#  Optional.</span></span><br></pre></td></tr></table></figure>
+<p>如果你想编译 <code>Python SQLite</code> 驱动来支持 <code>BerkeleyDB</code>, 检出 playhouse 模块(<code>lib/python2.7/site-packages/playhouse/berkeley_build.sh</code>) 中的 berkeley_build.sh 脚本。 这个脚本将会下载和编译 BerkeleyDB ，然后再编译 pysqlite，详细的过程<a href="http://charlesleifer.com/blog/building-the-python-sqlite-driver-for-use-with-berkeleydb/" target="_blank" rel="noopener">请看这篇文章</a>。 你也可以跳过这个步骤，直接使用 peewee 的 <a href="http://docs.peewee-orm.com/en/latest/peewee/api.html#SqliteDatabase" target="_blank" rel="noopener">SqliteDatabase</a> 类。</p>
+<h3 id="实现Flask应用"><a href="#实现Flask应用" class="headerlink" title="实现Flask应用"></a>实现Flask应用</h3><p>让我们从整体代码框架开始吧。 正如前面讨论的，我们将会创建2个 view，一个用来返回 JavaScript 文件，另一个用来创建1像素的GIF图片。 在 <code>analytics</code>目录（这是作者开发使用的目录，没有请自行创建），创建 <code>analytics.py</code> 文件，代码在下面列出。 这些代码包括了应用的代码结构，还有基本配置。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> b64decode</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> urlparse <span class="keyword">import</span> parse_qsl, urlparse</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, Response, abort, request</span><br><span class="line"><span class="keyword">from</span> peewee <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> playhouse.berkeleydb <span class="keyword">import</span> BerkeleyDatabase  <span class="comment"># Optional.</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1 pixel GIF, base64-encoded.</span></span><br><span class="line">BEACON = b64decode(<span class="string">'R0lGODlhAQABAIAAANvf7wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Store the database file in the app directory.</span></span><br><span class="line">APP_DIR = os.path.dirname(__file__)</span><br><span class="line">DATABASE_NAME = os.path.join(APP_DIR, <span class="string">'analytics.db'</span>)</span><br><span class="line">DOMAIN = <span class="string">'http://127.0.0.1:5000'</span>  <span class="comment"># <span class="doctag">TODO:</span> change me.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Simple JavaScript which will be included and executed on the client-side.</span></span><br><span class="line">JAVASCRIPT = <span class="string">''</span> <span class="comment"># <span class="doctag">TODO:</span> add javascript implementation.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Flask application settings.</span></span><br><span class="line">DEBUG = bool(os.environ.get(<span class="string">'DEBUG'</span>))</span><br><span class="line">SECRET_KEY = <span class="string">'secret - change me'</span>  <span class="comment"># <span class="doctag">TODO:</span> change me.</span></span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line">app.config.from_object(__name__)</span><br><span class="line"></span><br><span class="line">database = BerkeleyDatabase(DATABASE_NAME)  <span class="comment"># or SqliteDatabase(DATABASE_NAME)</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PageView</span><span class="params">(Model)</span>:</span></span><br><span class="line">    <span class="comment"># <span class="doctag">TODO:</span> add model definition.</span></span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        database = database</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route('/a.gif')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">analyze</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># <span class="doctag">TODO:</span> implement 1pixel gif view.</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route('/a.js')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">script</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># <span class="doctag">TODO:</span> implement javascript view.</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.errorhandler(404)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">not_found</span><span class="params">(e)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> Response(<span class="string">'Not found.'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    database.create_tables([PageView], safe=<span class="keyword">True</span>)</span><br><span class="line">    app.run()</span><br></pre></td></tr></table></figure>
+<h3 id="从浏览器获取信息"><a href="#从浏览器获取信息" class="headerlink" title="从浏览器获取信息"></a>从浏览器获取信息</h3><p>我们开始写收集客户端信息的 JavaScript 文件， 主要就是抽取一些页面基本信息</p>
+<ul>
+<li>URL信息，包括查询信息(document.location.href)</li>
+<li>页面的title (document.title)</li>
+<li>页面的feferring信息，如果有的话 (document.referrer)</li>
+</ul>
+<p>下面的一些属性也可以提取出来，如果你感兴趣的话（我：其实可能比列出的多的多，特别是H5），例如：</p>
+<ul>
+<li>cookie信息(document.cookie)</li>
+<li>文档的最后修改时间(document.lastModified)</li>
+<li><a href="http://www.w3schools.com/jsref/dom_obj_document.asp" target="_blank" rel="noopener">更多</a></li>
+</ul>
+<p>提取了这些信息之后，我们通过url的查询字符串传给 <code>analyze</code> 这个view。 为了简单，这个 js 将在页面加载的时候立即触发，我们把所有的代码封装到一个匿名函数中。 最后使用 encodeURIComponent 方法对所有参数进行转义，确保所有参数安全：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> img = <span class="keyword">new</span> Image,</span><br><span class="line">      url = <span class="built_in">encodeURIComponent</span>(<span class="built_in">document</span>.location.href),</span><br><span class="line">      title = <span class="built_in">encodeURIComponent</span>(<span class="built_in">document</span>.title),</span><br><span class="line">      ref = <span class="built_in">encodeURIComponent</span>(<span class="built_in">document</span>.referrer);</span><br><span class="line">  img.src = <span class="string">'%s/a.gif?url='</span> + url + <span class="string">'&amp;t='</span> + title + <span class="string">'&amp;ref='</span> + ref;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p>我们预留Python中的占位符 %s，用来读取 <strong>DOMAIN</strong> 配置并插入到其中，组成完整的JS代码</p>
+<p>在py文件中我们定义一个 JAVASCRIPT 变量来存储上面的 js代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Simple JavaScript which will be included and executed on the client-side.</span></span><br><span class="line">JAVASCRIPT = <span class="string">"""(function()&#123;</span></span><br><span class="line"><span class="string">    var d=document,i=new Image,e=encodeURIComponent;</span></span><br><span class="line"><span class="string">    i.src='%s/a.gif?url='+e(d.location.href)+'&amp;ref='+e(d.referrer)+'&amp;t='+e(d.title);</span></span><br><span class="line"><span class="string">    &#125;)()"""</span>.replace(<span class="string">'\n'</span>, <span class="string">''</span>)</span><br></pre></td></tr></table></figure>
+<p>在view中这样处理</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@app.route('/a.js')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">script</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">return</span> Response(</span><br><span class="line">        app.config[<span class="string">'JAVASCRIPT'</span>] % (app.config[<span class="string">'DOMAIN'</span>]),</span><br><span class="line">        mimetype=<span class="string">'text/javascript'</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="保存PV信息"><a href="#保存PV信息" class="headerlink" title="保存PV信息"></a>保存PV信息</h3><p>上面的脚本将会传3个值给 analyze 这个view， 包括页面的URL，title，和 referring page。 现在我们来定义一个 PageView 模型来存储这些数据。</p>
+<p>在服务端，我们也可以读取到 访问者的IP和请求头信息，所以我们也为这些信息创建字段，还要加上请求的时间戳字段。</p>
+<p>因为每个浏览器有着不同的请求头，每个页面请求的查询参数也不尽相同，我们将把他们用 JSON 格式存储到 TextField字段中。 如果你使用 Postgresql， 可以用 <a href="http://docs.peewee-orm.com/en/latest/peewee/playhouse.html#HStoreField" target="_blank" rel="noopener">HStore</a> 或者 <a href="http://docs.peewee-orm.com/en/latest/peewee/playhouse.html#JSONField" target="_blank" rel="noopener">native JSON data-type</a>。</p>
+<p>下面是 PageView 模型的定义，还定义了一个 JSONField 用来存储 查询参数和请求头信息：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">JSONField</span><span class="params">(TextField)</span>:</span></span><br><span class="line">    <span class="string">"""Store JSON data in a TextField."""</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">python_value</span><span class="params">(self, value)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> value <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">            <span class="keyword">return</span> json.loads(value)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">db_value</span><span class="params">(self, value)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> value <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">            <span class="keyword">return</span> json.dumps(value)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PageView</span><span class="params">(Model)</span>:</span></span><br><span class="line">    domain = CharField()</span><br><span class="line">    url = TextField()</span><br><span class="line">    timestamp = DateTimeField(default=datetime.datetime.now, index=<span class="keyword">True</span>)</span><br><span class="line">    title = TextField(default=<span class="string">''</span>)</span><br><span class="line">    ip = CharField(default=<span class="string">''</span>)</span><br><span class="line">    referrer = TextField(default=<span class="string">''</span>)</span><br><span class="line">    headers = JSONField()</span><br><span class="line">    params = JSONField()</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        database = database</span><br></pre></td></tr></table></figure>
+<p>先我们给 PageView 添加一个方法，让它可以从请求中提取所有需要的值，并存到数据库。 <code>urlparse</code> 模块中包含了很多提取 request 信息的方法，我们用这些方法来获取 访问URL和请求参数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PageView</span><span class="params">(Model)</span>:</span></span><br><span class="line">    <span class="comment"># ... field definitions ...</span></span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">create_from_request</span><span class="params">(cls)</span>:</span></span><br><span class="line">        parsed = urlparse(request.args[<span class="string">'url'</span>])</span><br><span class="line">        params = dict(parse_qsl(parsed.query))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> PageView.create(</span><br><span class="line">            domain=parsed.netloc,</span><br><span class="line">            url=parsed.path,</span><br><span class="line">            title=request.args.get(<span class="string">'t'</span>) <span class="keyword">or</span> <span class="string">''</span>,</span><br><span class="line">            ip=request.headers.get(<span class="string">'X-Forwarded-For'</span>, request.remote_addr),</span><br><span class="line">            referrer=request.args.get(<span class="string">'ref'</span>) <span class="keyword">or</span> <span class="string">''</span>,</span><br><span class="line">            headers=dict(request.headers),</span><br><span class="line">            params=params)</span><br></pre></td></tr></table></figure>
+<p><code>analyze</code> view 最后一步是返回一个1像素的GIF图片，为了安全起见，我们将检查下 URL是否存在，确保不会再数据库插入一个空白记录。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@app.route('/a.gif')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">analyze</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> request.args.get(<span class="string">'url'</span>):</span><br><span class="line">        abort(<span class="number">404</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> database.transaction():</span><br><span class="line">        PageView.create_from_request()</span><br><span class="line"></span><br><span class="line">    response = Response(app.config[<span class="string">'BEACON'</span>], mimetype=<span class="string">'image/gif'</span>)</span><br><span class="line">    response.headers[<span class="string">'Cache-Control'</span>] = <span class="string">'private, no-cache'</span></span><br><span class="line">    <span class="keyword">return</span> response</span><br></pre></td></tr></table></figure>
+<h3 id="启动应用"><a href="#启动应用" class="headerlink" title="启动应用"></a>启动应用</h3><p>这个时候如果你想测试下应用，可以先在命令行设置下 <code>DEBUG=1</code> 来启动debug模式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(analytics) $ DEBUG=1 python analytics.py</span><br><span class="line"> * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)</span><br><span class="line"> * Restarting with reloader</span><br></pre></td></tr></table></figure>
+<p>访问 <a href="http://127.0.0.1:5000/a.js" target="_blank" rel="noopener">http://127.0.0.1:5000/a.js</a> 可以看到js文件。 如果本地有其他的web应用，可以把这段js嵌入到它的页面中，测试下 分析应用</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://127.0.0.1:5000/a.js"</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>为了把应用部署到生产环境，建议使用专用的 WSGI 服务器。我喜欢用 gevent，非常轻量和高性能。你可以修改 analytics.py 文件，使用 gevent 代替原来的 Flask server。 下面是使用 gevent 来运行应用在 5000端口的写法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">   <span class="keyword">from</span> gevent.wsgi <span class="keyword">import</span> WSGIServer</span><br><span class="line">   WSGIServer((<span class="string">''</span>, <span class="number">5000</span>), app).serve_forever()</span><br></pre></td></tr></table></figure>
+<p>因为 gevent 是使用 monkey-patching 来实现高并发的，需要在 analytics.py 加上下面一行：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> gevent <span class="keyword">import</span> monkey; monkey.patch_all()</span><br></pre></td></tr></table></figure>
+<h3 id="查询数据"><a href="#查询数据" class="headerlink" title="查询数据"></a>查询数据</h3><p>真正感觉到快乐的是收集了几天数据，查询的时候。这部分我们将看看怎样从收集的数据中查询出来一些有意思的信息。</p>
+<p>下面使用我博客的数据，我们将会对最近7天的数据进行一些查询</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; from analytics import *</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; import datetime</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; week_ago = datetime.date.today() - datetime.timedelta(days=7)</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; base = PageView.select().<span class="built_in">where</span>(PageView.timestamp &gt;= week_ago)</span></span><br></pre></td></tr></table></figure>
+<p>首先，我们来看看过去一周的PV</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;</span>&gt; base.count()</span><br><span class="line"><span class="number">1133</span></span><br></pre></td></tr></table></figure>
+<p>有多少不同的IP访问过我的网站</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; <span class="selector-tag">base</span><span class="selector-class">.select</span>(<span class="selector-tag">PageView</span><span class="selector-class">.ip</span>)<span class="selector-class">.group_by</span>(<span class="selector-tag">PageView</span><span class="selector-class">.ip</span>)<span class="selector-class">.count</span>()</span><br><span class="line">850</span><br></pre></td></tr></table></figure>
+<p>访问最多的10个页面？</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">print</span> (base</span><br><span class="line">       .select(PageView.title, fn.Count(PageView.id))</span><br><span class="line">       .group_by(PageView.title)</span><br><span class="line">       .order_by(fn.Count(PageView.id).desc())</span><br><span class="line">       .tuples())[:<span class="number">10</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Prints...</span></span><br><span class="line">[(<span class="string">'Postgresql HStore, JSON data-type and Arrays with Peewee ORM'</span>,</span><br><span class="line">  <span class="number">88</span>),</span><br><span class="line"> (<span class="string">"Describing Relationships: Django's ManyToMany Through"</span>,</span><br><span class="line">  <span class="number">73</span>),</span><br><span class="line"> (<span class="string">'Using python and k-means to find the dominant colors in images'</span>,</span><br><span class="line">  <span class="number">66</span>),</span><br><span class="line"> (<span class="string">'SQLite: Small. Fast. Reliable. Choose any three.'</span>, <span class="number">58</span>),</span><br><span class="line"> (<span class="string">'Using python to generate awesome linux desktop themes'</span>,</span><br><span class="line">  <span class="number">54</span>),</span><br><span class="line"> (<span class="string">"Don't sweat the small stuff - use flask blueprints"</span>, <span class="number">51</span>),</span><br><span class="line"> (<span class="string">'Using SQLite Full-Text Search with Python'</span>, <span class="number">48</span>),</span><br><span class="line"> (<span class="string">'Home'</span>, <span class="number">47</span>),</span><br><span class="line"> (<span class="string">'Blog Entries'</span>, <span class="number">46</span>),</span><br><span class="line"> (<span class="string">'Django Patterns: Model Inheritance'</span>, <span class="number">44</span>)]</span><br></pre></td></tr></table></figure>
+<p>4个小时为单位，一天中哪个时间访问的人最多呢？</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">hour</span> = fn.date_part('<span class="built_in">hour</span>', PageView.timestamp) / <span class="number">4</span></span><br><span class="line">id_count = fn.Count(PageView.id)</span><br><span class="line">print (<span class="built_in">base</span></span><br><span class="line">       .select(<span class="built_in">hour</span>, id_count)</span><br><span class="line">       .group_by(<span class="built_in">hour</span>)</span><br><span class="line">       .order_by(id_count.desc())</span><br><span class="line">       .tuples())[<span class="symbol">:</span>]</span><br><span class="line">[(<span class="number">3</span>, <span class="number">208</span>),</span><br><span class="line"> (<span class="number">2</span>, <span class="number">201</span>),</span><br><span class="line"> (<span class="number">0</span>, <span class="number">194</span>),</span><br><span class="line"> (<span class="number">1</span>, <span class="number">183</span>),</span><br><span class="line"> (<span class="number">4</span>, <span class="number">178</span>),</span><br><span class="line"> (<span class="number">5</span>, <span class="number">169</span>)]</span><br></pre></td></tr></table></figure>
+<p>基于这些数据，看起来每天午餐时间访问的人最多，网上午夜前访问的人数最少，总得流量比较平均。</p>
+<p>哪些 user-agents 最流行呢？</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line">c = Counter(pv.headers.get(<span class="string">'User-Agent'</span>) <span class="keyword">for</span> pv <span class="keyword">in</span> base)</span><br><span class="line"><span class="keyword">print</span> c.most_common(<span class="number">5</span>)</span><br><span class="line">[(<span class="string">u'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.120 Safari/537.36'</span>,</span><br><span class="line">  <span class="number">81</span>),</span><br><span class="line"> (<span class="string">u'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.120 Safari/537.36'</span>,</span><br><span class="line">  <span class="number">70</span>),</span><br><span class="line"> (<span class="string">u'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:32.0) Gecko/20100101 Firefox/32.0'</span>,</span><br><span class="line">  <span class="number">50</span>),</span><br><span class="line"> (<span class="string">u'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.78.2 (KHTML, like Gecko) Version/7.0.6 Safari/537.78.2'</span>,</span><br><span class="line">  <span class="number">37</span>),</span><br><span class="line"> (<span class="string">u'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0'</span>,</span><br><span class="line">  <span class="number">37</span>)]</span><br></pre></td></tr></table></figure>
+<p>你想要什么数据全看你。 一个有意思的就是查询某个IP访问所有页面的次序列表。 这也就能看到人们怎么再你的网站上一页一页的访问</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">inner = base.select(PageView.ip, PageView.url).order_by(PageView.timestamp)</span><br><span class="line">query = (PageView</span><br><span class="line">         .select(PageView.ip, fn.GROUP_CONCAT(PageView.url).alias(<span class="string">'urls'</span>))</span><br><span class="line">         .from_(inner.alias(<span class="string">'t1'</span>))</span><br><span class="line">         .group_by(PageView.ip)</span><br><span class="line">         .order_by(fn.Count(PageView.url).desc())</span><br><span class="line"><span class="keyword">print</span> &#123;pv.ip: pv.urls.split(<span class="string">','</span>) <span class="keyword">for</span> pv <span class="keyword">in</span> query[:<span class="number">10</span>]&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Prints something like the following:</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">u'xxx.xxx.xxx.xxx'</span>: [</span><br><span class="line">    <span class="string">u'/blog/peewee-was-baroque-so-i-rewrote-it/'</span>,</span><br><span class="line">    <span class="string">u'/blog/peewee-was-baroque-so-i-rewrote-it/'</span>,</span><br><span class="line">    <span class="string">u'/blog/'</span>,</span><br><span class="line">    <span class="string">u'/blog/postgresql-hstore-json-data-type-and-arrays-with-peewee-orm/'</span>,</span><br><span class="line">    <span class="string">u'/blog/search/'</span>,</span><br><span class="line">    <span class="string">u'/blog/the-search-for-the-missing-link-what-lies-between-sql-and-django-s-orm-/'</span>,</span><br><span class="line">    <span class="string">u'/blog/how-do-you-use-peewee-/'</span>],</span><br><span class="line">  <span class="string">u'xxx.xxx.xxx.xxx'</span>: [</span><br><span class="line">    <span class="string">u'/blog/dont-sweat-small-stuff-use-flask-blueprints/'</span>,</span><br><span class="line">    <span class="string">u'/'</span>,</span><br><span class="line">    <span class="string">u'/blog/'</span>,</span><br><span class="line">    <span class="string">u'/blog/migrating-to-sqlite/'</span>,</span><br><span class="line">    <span class="string">u'/blog/'</span>,</span><br><span class="line">    <span class="string">u'/blog/saturday-morning-hacks-revisiting-the-notes-app/'</span>],</span><br><span class="line">  <span class="string">u'xxx.xxx.xxx.xxx'</span>: [</span><br><span class="line">    <span class="string">u'/blog/using-python-to-generate-awesome-linux-desktop-themes/'</span>,</span><br><span class="line">    <span class="string">u'/'</span>,</span><br><span class="line">    <span class="string">u'/blog/'</span>,</span><br><span class="line">    <span class="string">u'/blog/customizing-google-chrome-s-new-tab-page/'</span>,</span><br><span class="line">    <span class="string">u'/blog/-wallfix-using-python-to-set-my-wallpaper/'</span>,</span><br><span class="line">    <span class="string">u'/blog/simple-botnet-written-python/'</span>],</span><br><span class="line">  <span class="comment"># etc...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="提升应用的想法"><a href="#提升应用的想法" class="headerlink" title="提升应用的想法"></a>提升应用的想法</h3><ul>
+<li>建立一个web接口或者是API来查询pv数据</li>
+<li>使用表或者是类似 Postgresql HStore 来标准化请求头数据</li>
+<li>收集用户cookies 跟踪用户访问路径</li>
+<li>使用 GeoIP 来确定用户的地理位置</li>
+<li>使用 canvas 指纹来更好的确定用户的唯一性</li>
+<li>更多更酷的查询来研究数据</li>
+</ul>
+<h3 id="感谢阅读"><a href="#感谢阅读" class="headerlink" title="感谢阅读"></a>感谢阅读</h3><p>感谢阅读，有什么问题请联系我。 项目的 <a href="https://gist.github.com/coleifer/9899de010c647823a14f" target="_blank" rel="noopener">gist地址在这</a></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/flask/" rel="tag">#flask</a>
+          
+            <a href="/tags/埋点/" rel="tag">#埋点</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/11/21/reading-list-201511-md/" rel="next" title="lzz's reading list 01">
+                <i class="fa fa-chevron-left"></i> lzz's reading list 01
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/11/27/python-shell-md5-use/" rel="prev" title="【Py之旅】Python Shell  MD5使用的那些事">
+                【Py之旅】Python Shell  MD5使用的那些事 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars3.githubusercontent.com/u/2696746?v=3&s=460" alt="orangleliu" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">orangleliu</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">lzz的编程之旅, Linux, python，lua，openresty</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">42</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">19</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">38</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/orangle" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/orangleliu" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> CSDN
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.orangleliu.info" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> 蓝色石榴
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank" rel="external nofollow">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+                <a href="http://frainmeng.github.io/" target="_blank">Yuan</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#分析请求-响应流程"><span class="nav-number">1.</span> <span class="nav-text">分析请求/响应流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设计考虑"><span class="nav-number">2.</span> <span class="nav-text">设计考虑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库相关"><span class="nav-number">3.</span> <span class="nav-text">数据库相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WSGI-Server"><span class="nav-number">4.</span> <span class="nav-text">WSGI Server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建-virtualenv"><span class="nav-number">5.</span> <span class="nav-text">创建 virtualenv</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现Flask应用"><span class="nav-number">6.</span> <span class="nav-text">实现Flask应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#从浏览器获取信息"><span class="nav-number">7.</span> <span class="nav-text">从浏览器获取信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#保存PV信息"><span class="nav-number">8.</span> <span class="nav-text">保存PV信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动应用"><span class="nav-number">9.</span> <span class="nav-text">启动应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查询数据"><span class="nav-number">10.</span> <span class="nav-text">查询数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#提升应用的想法"><span class="nav-number">11.</span> <span class="nav-text">提升应用的想法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#感谢阅读"><span class="nav-number">12.</span> <span class="nav-text">感谢阅读</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">orangleliu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

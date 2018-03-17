@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://orangleliu.info/2017/03/24/openresty-lua-resty-qrcode/</loc>
+    
+    <lastmod>2017-03-24T08:37:29.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2016/02/26/2016-spring-interview-travel/</loc>
+    
+    <lastmod>2017-03-20T11:08:55.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2016/12/27/python-logging-module-using-thinking/</loc>
+    
+    <lastmod>2016-12-27T07:53:15.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2016/03/14/python-logging-somenotes/</loc>
+    
+    <lastmod>2016-11-11T02:29:09.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2016/10/29/uwsgi-nginx-deploy-django-project/</loc>
+    
+    <lastmod>2016-10-29T08:27:31.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2014/09/24/python-parser-domain-from-url/</loc>
+    
+    <lastmod>2016-10-29T08:18:46.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2016/10/09/django-unittest-summary/</loc>
+    
+    <lastmod>2016-10-09T11:24:38.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2016/09/27/openresty-sqlite-install-and-use/</loc>
+    
+    <lastmod>2016-09-27T15:26:29.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2016/09/25/sweet-nginx-forbidden-request-by-ua/</loc>
+    
+    <lastmod>2016-09-25T10:56:25.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2016/09/23/openresty-get-vps-netflow/</loc>
+    
+    <lastmod>2016-09-23T10:59:42.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2016/09/23/openwrt-iptables-using/</loc>
+    
+    <lastmod>2016-09-23T10:42:03.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2016/09/19/github-webhooks-auto-deploy-static-blog/</loc>
+    
+    <lastmod>2016-09-19T06:05:45.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2016/05/19/linux-cmd-xargs/</loc>
+    
+    <lastmod>2016-09-19T05:36:40.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2016/07/06/reading-list-lzz-2016summer/</loc>
+    
+    <lastmod>2016-09-19T05:36:22.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2016/07/13/learn-algorithm-graph/</loc>
+    
+    <lastmod>2016-09-19T05:35:39.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2016/04/23/reading-list-lzz-201604/</loc>
+    
+    <lastmod>2016-08-18T09:54:53.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2016/05/04/reading-list-lzz-201605/</loc>
+    
+    <lastmod>2016-06-24T02:47:48.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2016/04/17/python-shell-base64/</loc>
+    
+    <lastmod>2016-05-20T03:43:57.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2016/04/05/reading-list-201602/</loc>
+    
+    <lastmod>2016-04-05T07:01:59.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2016/01/27/reading-list-lzz-201601/</loc>
+    
+    <lastmod>2016-04-05T06:58:12.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2015/12/07/reading-list-201512-md/</loc>
+    
+    <lastmod>2016-04-05T06:58:02.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2015/11/21/reading-list-201511-md/</loc>
+    
+    <lastmod>2016-04-05T06:57:05.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2015/11/04/hexo-blog-notes/</loc>
+    
+    <lastmod>2016-03-22T08:15:13.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2016/03/06/python-pre-fork-mode-use/</loc>
+    
+    <lastmod>2016-03-11T03:48:35.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2016/03/06/python-signal-module-simple-use/</loc>
+    
+    <lastmod>2016-03-08T14:15:45.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2016/01/03/lzz-2015-summary/</loc>
+    
+    <lastmod>2016-01-29T07:11:54.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/tags/index.html</loc>
+    
+    <lastmod>2016-01-29T07:09:51.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/about/index.html</loc>
+    
+    <lastmod>2016-01-29T06:35:53.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2016/01/08/aaa-radius-wifi-auth/</loc>
+    
+    <lastmod>2016-01-08T08:36:33.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2015/11/27/python-shell-md5-use/</loc>
+    
+    <lastmod>2015-12-07T03:19:33.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2015/12/01/conceptual-rlockbusting-read-notes/</loc>
+    
+    <lastmod>2015-12-01T14:26:53.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2015/11/23/build-analytics-app-with-flask/</loc>
+    
+    <lastmod>2015-11-23T09:37:25.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2014/08/09/use-docker-in-python-and-ipython/</loc>
+    
+    <lastmod>2015-11-23T09:14:37.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2014/08/09/celery-best-practice/</loc>
+    
+    <lastmod>2015-11-23T09:10:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2014/08/18/docker-first-time-useed/</loc>
+    
+    <lastmod>2015-11-23T09:08:55.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2015/11/15/lzz-programe-travel-20154/</loc>
+    
+    <lastmod>2015-11-15T05:43:01.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2015/05/23/python-performance-analyze/</loc>
+    
+    <lastmod>2015-11-08T14:17:19.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2015/04/04/blackroad-server-side-params-adjust/</loc>
+    
+    <lastmod>2015-11-08T14:17:12.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2015/03/14/blackroad-web-site-flow-grow/</loc>
+    
+    <lastmod>2015-11-08T14:16:24.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2014/10/22/django-orm-use-F-class/</loc>
+    
+    <lastmod>2015-11-08T14:16:18.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2015/06/24/lzz-programe-travel-20151/</loc>
+    
+    <lastmod>2015-11-08T14:15:49.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2015/09/01/lzz-programe-travel-20152/</loc>
+    
+    <lastmod>2015-11-08T14:15:41.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2015/10/14/lzz-programe-travel-20153/</loc>
+    
+    <lastmod>2015-11-08T14:15:02.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/2015/03/23/write-simple-lua-c-extention/</loc>
+    
+    <lastmod>2015-11-08T14:14:42.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://orangleliu.info/categories/index.html</loc>
+    
+    <lastmod>2015-11-06T10:03:33.000Z</lastmod>
+    
+  </url>
+  
+</urlset>
